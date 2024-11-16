@@ -6,7 +6,7 @@ import {
   Web3AuthProvider,
   Web3AuthProviderProps,
 } from "@web3auth/modal-react-hooks";
-import { initializeWeb3AuthContext } from "@/context/web3AuthContext";
+import { initializeWeb3AuthContext } from "../context/web3AuthContext";
 
 import "../styles/public.css";
 import { AuthProvider } from "@/context/authContext";

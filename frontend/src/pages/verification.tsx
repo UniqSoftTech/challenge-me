@@ -41,7 +41,7 @@ const App = () => {
 
   useEffect(() => {
     getAccounts();
-  }, []);
+  }, [provider]);
 
   const getAccounts = async () => {
     if (!provider) return;

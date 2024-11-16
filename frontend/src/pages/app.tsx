@@ -5,11 +5,11 @@ import Input from "@/components/data-display/Input";
 import ReusableModal from "@/components/data-display/Modal";
 import useGlobalRequestStore from "@/hooks/useGlobalRequestStore";
 import useRequest from "@/hooks/useRequest";
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 
 function App() {
   const [isOpen, setIsOpen] = useState(true);
-  const { requests, execute } = useGlobalRequestStore();
+  const { execute } = useGlobalRequestStore();
 
   const { loading, data, trigger } = useRequest({
     key: "userRooms",
