@@ -9,6 +9,8 @@ import { chainConfig, clientId } from "../utils/chainUtils";
 import ethersRPC from "@/utils/ethersRPC";
 import { IDKitWidget, VerificationLevel } from "@worldcoin/idkit";
 import { useAuth } from "@/context/authContext";
+import Button from "@/components/data-display/Button";
+import { useRouter } from "next/router";
 
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: { chainConfig },
@@ -22,9 +24,9 @@ const web3AuthOptions: Web3AuthOptions = {
 const web3auth = new Web3Auth(web3AuthOptions);
 
 function App() {
+  const router = useRouter();
   const { walletAddress, setWalletAddress } = useAuth();
   const [provider, setProvider] = useState<IProvider | null>(null);
-  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -39,7 +41,7 @@ function App() {
         setProvider(web3auth.provider);
 
         if (web3auth.connected) {
-          setLoggedIn(true);
+          // setLoggedIn(true);
         }
       } catch (error) {
         console.error(error);
@@ -53,9 +55,10 @@ function App() {
     const web3authProvider = await web3auth.connect();
     setProvider(web3authProvider);
     if (web3auth.connected) {
-      setLoggedIn(true);
       getAccounts();
     }
+
+    router.push("/verification");
   };
 
   const getAccounts = async () => {
@@ -69,35 +72,13 @@ function App() {
   const logout = async () => {
     await web3auth.logout();
     setProvider(null);
-    setLoggedIn(false);
+    // setLoggedIn(false);
   };
 
-  const loggedInView = (
-    <>
-      <div className="flex-container">
-        <IDKitWidget
-          action={"verification"}
-          onError={(error) => console.log("onError: ", error)}
-          onSuccess={(response) => console.log("onSuccess: ", response)}
-          handleVerify={(proof) => console.log("proof", proof)}
-          app_id={"app_f33e38c15629edb15adcf97b3e3649c0"}
-          verification_level={VerificationLevel.Device}
-        >
-          {({ open }) => <button onClick={open}>Open IDKit</button>}
-        </IDKitWidget>
-        <div>
-          <button onClick={getAccounts} className="card">
-            Get User Info
-          </button>
-        </div>
-        <div>
-          <button onClick={logout} className="card">
-            Log Out
-          </button>
-        </div>
-      </div>
-    </>
-  );
+  const handleWorldCoinVerify = (proof: any) => {
+    console.log("🚀 ~ handleWorldCoinVerify ~ proof:", proof);
+    // router.push("/verification");
+  };
 
   const unloggedInView = (
     <button
@@ -109,7 +90,7 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center justify-center">
+    <div className="flex flex-col">
       <header className="text-center">
         <h1 className="text-4xl font-extrabold mb-4 bg-gradient-to-r from-green-400 to-blue-500 text-transparent bg-clip-text">
           Hello World
@@ -119,7 +100,7 @@ function App() {
 
       <main className="flex flex-col items-center mt-8">
         <div className="flex flex-col items-center justify-center gap-6">
-          {loggedIn ? loggedInView : unloggedInView}
+          {unloggedInView}
         </div>
       </main>
     </div>

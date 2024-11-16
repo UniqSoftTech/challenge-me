@@ -4,11 +4,10 @@
 
 /* styles/globals.css */
 body {
-  font-family: "Rubik", sans-serif;
   font-optical-sizing: auto;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  color: white;
-  background-color: black;
+  color: black;
+  background-color: white;
 }
