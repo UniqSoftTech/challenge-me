@@ -37,17 +37,17 @@ const App = () => {
     relationship_status: "",
   });
 
-  const [errors, setErrors] = useState<Partial<FormData>>({});
-
-  useEffect(() => {
-    getAccounts();
-  }, [provider]);
-
   const getAccounts = async () => {
     if (!provider) return;
     const address = await ethersRPC.getAccounts(provider);
     setWalletAddress(address);
   };
+
+  useEffect(() => {
+    getAccounts();
+  }, [getAccounts]);
+
+  const [errors, setErrors] = useState<Partial<FormData>>({});
 
   const fields = [
     {
