@@ -7,7 +7,7 @@ import {
   Web3AuthProviderProps,
 } from "@web3auth/modal-react-hooks";
 import { AuthProvider } from "@/context/authContext";
-import { initializeWeb3AuthContext } from "../context/web3AuthContext";
+import { initializeWeb3AuthContext } from "../context/webContext";
 
 import "../styles/public.css";
 import "react-toastify/dist/ReactToastify.css";
