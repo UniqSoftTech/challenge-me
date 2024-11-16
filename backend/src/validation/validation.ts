@@ -20,3 +20,7 @@ export const updateUser: ValidationChain[] = [
   body('birthday').notEmpty().withMessage("birthday is required"),
   body('relationship_status').notEmpty().withMessage("relationship_status is required"),
 ];
+
+export const signin: ValidationChain[] = [
+  body('wallet').notEmpty().withMessage("wallet is required"),
+];

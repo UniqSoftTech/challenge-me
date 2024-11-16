@@ -15,6 +15,7 @@ const roomMember = new RoomMemberController();
 
 /** user */
 router.post('/user', v.createUser, checkValid, user.create);
+router.post('/user/signin', v.signin, checkValid, user.signin);
 router.put('/user', authenticate, v.updateUser, checkValid, user.put);
 
 /** room */

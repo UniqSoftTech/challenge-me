@@ -1,9 +1,7 @@
-import { ReqUser } from './req.user';
-
 declare global {
   namespace Express {
     interface Request {
-      user?: ReqUser;
+      user?: { id: number;[key: string]: any };
     }
   }
 }

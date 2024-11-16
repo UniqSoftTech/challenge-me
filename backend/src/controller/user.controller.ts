@@ -15,6 +15,21 @@ export class UserController {
     }
   };
 
+  signin = async (req: any, res: any) => {
+    try {
+      const { wallet } = req.body;
+      const user = await db.Users.findOne({ where: { wallet } });
+
+      if (!user)
+        return res.status(404).json({ message: 'User not found', status: false });
+
+      const token = generateToken(user);
+      res.status(200).json({ status: true, data: { user, token } });
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error', error });
+    }
+  }
+
   put = async (req: any, res: any) => {
     try {
       const userId = req?.user?.id;

@@ -1,1 +1,0 @@
-export interface ReqUser { id: number; wallet: string; proof: string; age: number; name: string; height: number; weight: number; birthday: Date; relationship_status: string; }
