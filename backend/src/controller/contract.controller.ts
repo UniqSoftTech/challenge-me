@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { ethers } from 'ethers';
 import { contract_address, json_rpc_url, private_key } from '../configs/config';
+import { serializeBigInt } from '../utils/func.untils';
 
 // Your contract's ABI (from the JSON you provided)
 const contractABI = [
@@ -45,6 +46,52 @@ const contractABI = [
   },
   {
     "type": "function",
+    "name": "getMarketInfoForAddress",
+    "inputs": [
+      {
+        "name": "_address",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple[]",
+        "internalType": "struct MinimumPolymarket.MarketInfo[]",
+        "components": [
+          {
+            "name": "marketId",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "question",
+            "type": "string",
+            "internalType": "string"
+          },
+          {
+            "name": "isCreator",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "isYesVoter",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "isNoVoter",
+            "type": "bool",
+            "internalType": "bool"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "markets",
     "inputs": [
       {
@@ -73,6 +120,11 @@ const contractABI = [
         "name": "noAmount",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "marketCreator",
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "yesVote",
@@ -188,6 +240,14 @@ const contractABI = [
     "anonymous": false
   }
 ]
+
+interface MarketInfo {
+  marketId: bigint;
+  question: string;
+  isCreator: boolean;
+  isYesVoter: boolean;
+  isNoVoter: boolean;
+};
 
 export class ContractController {
   private contractAddress = contract_address;
@@ -313,5 +373,32 @@ export class ContractController {
         error: error,
       });
     }
+  };
+
+  getMarketInfo = async (req: any, res: any) => {
+    const address = req?.user?.wallet;
+
+    try {
+      // Call the smart contract's `getMarketInfoForAddress` function
+      const marketInfo: MarketInfo[] = await this.contract.getMarketInfoForAddress(address);
+
+      const data = await Promise.all(marketInfo.map((market: any) => {
+        return {
+          marketId: market[0].toString(),  // Convert BigInt to string
+          question: market[1],
+          isCreator: market[2],
+          isYesVoter: market[3],
+          isNoVoter: market[4],
+        };
+      }))
+
+      // Return the data to the client
+      res.status(200).json({ data, status: true });
+    } catch (error) {
+      console.error('Error fetching market info:', error);
+      res.status(500).json({ message: 'Error fetching market information', error: error });
+    }
   }
+
+  
 }
