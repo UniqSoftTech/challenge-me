@@ -34,7 +34,10 @@ function App() {
       <div className="flex flex-col gap-3">
         {data?.data?.map((club: any, index: number) => {
           return (
-            <div className="flex flex-col relative overflow-hidden gap-2 p-5 border-2 border-black bg-primary rounded-2xl shadow-[3px_3px_0px_#94a3b8]">
+            <div
+              key={index}
+              className="flex flex-col relative overflow-hidden gap-2 p-5 border-2 border-black bg-primary rounded-2xl shadow-[3px_3px_0px_#94a3b8]"
+            >
               <div className="absolute right-[-45%] bottom-[-40%]">
                 <Image src={Shape} alt="Shape" />
               </div>
