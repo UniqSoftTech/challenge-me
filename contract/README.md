@@ -72,5 +72,9 @@ forge verify-contract 0xa282C9B02FCBD1Abdb27a876ff68FABecb730D37 ./src/Polymarke
 
 
 ```sh
-forge create src/Polymarket.sol:Polymarket --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY --constructor-args "0xa282C9B02FCBD1Abdb27a876ff68FABecb730D37" 
+forge create src/Polymarket.sol:Polymarket --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY --constructor-args "0xa282C9B02FCBD1Abdb27a876ff68FABecb730D37"  --verify
+```
+
+```sh
+forge verify-contract 0x845c57E8d8c39922E1fa08b12c5E56B829174A0b src/Polymarket.sol:Polymarket --chain 84532
 ```
