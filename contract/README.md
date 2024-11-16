@@ -64,3 +64,13 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+
+
+```sh
+forge verify-contract 0xa282C9B02FCBD1Abdb27a876ff68FABecb730D37 ./src/Polymarket.sol:Polymarket --chain 84532 --constructor-args "0xa282C9B02FCBD1Abdb27a876ff68FABecb730D37" --etherscan-api-key $ETHERSCAN_API_KEY
+```
+
+
+```sh
+forge create src/Polymarket.sol:Polymarket --rpc-url $SEPOLIA_RPC_URL --private-key $PRIVATE_KEY --constructor-args "0xa282C9B02FCBD1Abdb27a876ff68FABecb730D37" 
+```
