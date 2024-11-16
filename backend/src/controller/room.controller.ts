@@ -25,8 +25,8 @@ export class RoomController {
 
   getUserRooms = async (req: any, res: any) => {
     try {
-      await db.RoomMember.findAll({ where: { user_id: req?.user?.id }, include: [{ model: db.Room, as: 'room' }] });
-      res.status(201).json({ message: 'User created successfully' });
+      const data = await db.Room.findAll({ where: { created_by: req?.user?.id }, include: [{ model: db.RoomMember, as: 'members' }] });
+      res.status(200).json({ status: true, data });
     } catch (error) {
       res.status(500).json({ message: 'Internal server error', error });
     }

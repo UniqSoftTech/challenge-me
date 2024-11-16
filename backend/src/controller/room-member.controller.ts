@@ -2,13 +2,18 @@ import db from "../models/_index";
 import { Request, Response } from 'express';
 
 export class RoomMemberController {
-  create = async (req: Request, res: Response) => {
+  joinRoom = async (req: any, res: any) => {
     try {
-      const { room_id, user_id } = req.body;
-      await db.RoomMember.create({ room_id, user_id });
-      res.status(201).json({ message: 'User created successfully' });
+      const { room_id } = req.body;
+      const isJoined = await db.RoomMember.findOne({ where: { room_id, user_id: req?.user?.id } });
+
+      if (isJoined)
+        return res.status(200).json({ status: false, message: "Already joined this room" });
+
+      await db.RoomMember.create({ room_id, user_id: req?.user?.id });
+      res.status(200).json({ status: true });
     } catch (error) {
-      res.status(500).json({ message: 'Internal server error', error });
+      res.status(500).json({ message: 'Internal server error', error, status: false });
     }
   }
 }

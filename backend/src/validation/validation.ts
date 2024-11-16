@@ -29,6 +29,10 @@ export const claimWinnings: ValidationChain[] = [
   body('marketId').notEmpty().withMessage("marketId is required"),
 ];
 
+export const joinRoom: ValidationChain[] = [
+  body('room_id').notEmpty().withMessage("room_id is required"),
+];
+
 export const createMarket: ValidationChain[] = [
   body('question').notEmpty().withMessage("question is required"),
 ];

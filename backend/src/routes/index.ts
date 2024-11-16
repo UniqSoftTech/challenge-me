@@ -26,7 +26,7 @@ router.get('/room', authenticate, room.get);
 router.get('/user-rooms', authenticate, room.getUserRooms);
 
 /** room member */
-router.post('/room-member', roomMember.create);
+router.post('/room-member/join', authenticate, v.joinRoom, checkValid, roomMember.joinRoom);
 
 /** contract */
 router.post('/contract/claimWinnings', authenticate, v.claimWinnings, checkValid, contract.claimWinnings);
