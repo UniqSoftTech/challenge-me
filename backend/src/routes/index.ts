@@ -8,6 +8,7 @@ import { checkValid } from '../middlware/validation.middleware';
 import { OpenAIController } from '../controller/open-ai.controller';
 import { ContractController } from '../controller/contract.controller';
 import { RoomMemberController } from '../controller/room-member.controller';
+import { ChallengeController } from '../controller/challenge.controller';
 
 const router = Router();
 
@@ -16,6 +17,7 @@ const user = new UserController();
 const openai = new OpenAIController();
 const contract = new ContractController();
 const roomMember = new RoomMemberController();
+const challenge = new ChallengeController();
 
 /** user */
 router.post('/user', v.createUser, checkValid, user.create);
@@ -40,9 +42,11 @@ router.post('/contract/placeBet', authenticate, v.placeBet, checkValid, contract
 router.post('/contract/createMarket', authenticate, v.createMarket, checkValid, contract.createMarket);
 router.post('/contract/claimWinnings', authenticate, v.claimWinnings, checkValid, contract.claimWinnings);
 
-
 /** openai */
 router.post("/openai/check-challengable", authenticate, v.isChallengeable, checkValid, openai.checkChallengeable);
 router.get("/openai/suggest-question", authenticate, openai.generateQuestions);
+
+/** challenge */
+router.post('/challenge', authenticate, v.isChallengeable, checkValid, challenge.create);
 
 export default router;
