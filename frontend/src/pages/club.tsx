@@ -12,15 +12,19 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 
 function App() {
-  const [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
+
+  const { loading, data, trigger } = useRequest({
+    key: "userRooms",
+    url: "room/user",
+  });
 
   return (
     <div className="p-4">
       <div className="pb-4 flex flex-row items-center justify-between">
         <h1 className="text-xl">My Clubs</h1>
         <button
-          onClick={() => router.push("/createChallenge")}
+          onClick={() => router.push("/createClub")}
           className="flex flex-row items-center gap-1 bg-[#FFD700] px-4 py-1 rounded-2xl border border-black shadow-[3px_3px_0px_#94a3b8]"
         >
           <Plus />
