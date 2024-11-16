@@ -7,9 +7,7 @@ import sequelize from './configs/db.config';
 
 
 const app = express();
-
 app.use(bodyParser.json());
-
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
@@ -37,3 +35,5 @@ if (process.env.NODE_ENV !== 'production') {
     console.error("🚫🚫🚫 DB CONNECTION:", err);
   }
 })();
+
+export default app

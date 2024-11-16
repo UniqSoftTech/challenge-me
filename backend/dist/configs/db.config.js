@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
 const dotenv_1 = __importDefault(require("dotenv"));
+const pg_1 = __importDefault(require("pg"));
 dotenv_1.default.config();
 const DB_HOST = process.env.DB_HOST;
 const DB_USER = process.env.DB_USER;
@@ -16,6 +17,7 @@ const sequelize = new sequelize_1.Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
     dialect: DB_DIALECT,
     logging: false,
     port: 25060,
+    dialectModule: pg_1.default,
     dialectOptions: {
         ssl: {
             require: true,

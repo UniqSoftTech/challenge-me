@@ -1,5 +1,6 @@
 import { Dialect, Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
+import pg from 'pg';
 
 dotenv.config();
 
@@ -14,6 +15,7 @@ const sequelize = new Sequelize(DB_NAME!, DB_USER!, DB_PASSWORD, {
   dialect: DB_DIALECT,
   logging: false,
   port: 25060,
+  dialectModule: pg,
   dialectOptions: {
     ssl: {
       require: true,
