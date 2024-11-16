@@ -7,6 +7,7 @@ import { RoomMemberController } from '../controller/room-member.controller';
 import { authenticate } from '../middlware/auth.middlware';
 import { checkValid } from '../middlware/validation.middleware';
 import { ContractController } from '../controller/contract.controller';
+import { OpenAIController } from '../controller/open-ai.controller';
 
 const router = Router();
 
@@ -14,6 +15,7 @@ const room = new RoomController()
 const user = new UserController();
 const roomMember = new RoomMemberController();
 const contract = new ContractController();
+const openai = new OpenAIController();
 
 /** user */
 router.post('/user', v.createUser, checkValid, user.create);
@@ -33,5 +35,8 @@ router.post('/contract/claimWinnings', authenticate, v.claimWinnings, checkValid
 router.post('/contract/createMarket', authenticate, v.createMarket, checkValid, contract.createMarket);
 router.post('/contract/placeBet', authenticate, v.placeBet, checkValid, contract.placeBet);
 router.post('/contract/vote', authenticate, v.vote, checkValid, contract.vote);
+
+/** openai */
+router.post("/openai/check-challengable", authenticate, v.isChallengeable, checkValid, openai.checkChallengeable);
 
 export default router;

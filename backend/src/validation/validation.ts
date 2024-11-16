@@ -48,3 +48,8 @@ export const vote: ValidationChain[] = [
   body('marketId').notEmpty().withMessage("marketId is required"),
   body('_votedYes').notEmpty().withMessage("_votedYes is required"),
 ];
+
+
+export const isChallengeable: ValidationChain[] = [
+  body('question').notEmpty().withMessage("question is required"),
+];
