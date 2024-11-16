@@ -12,7 +12,6 @@ interface InputProps {
 }
 
 const Input: React.FC<InputProps> = ({
-  label,
   type = "text",
   name,
   value,

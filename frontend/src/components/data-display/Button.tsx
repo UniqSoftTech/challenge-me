@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 
 interface ButtonProps {
   title: string;
@@ -16,7 +15,6 @@ const Button: React.FC<ButtonProps> = ({
   onPress,
   className,
   loading,
-  isBase,
   disabled,
 }) => {
   return (
