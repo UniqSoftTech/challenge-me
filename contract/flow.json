@@ -3,6 +3,6 @@
   "contracts": {
     "HelloWorld": "./HelloWorld.cdc"
   },
-  "account": "0xYourAccountAddress",
-  "privateKey": "6f19f7f109de2a067e2ba84a9de8f16b01907b62db70cb6f9b82d35b12d86485"
+  "account": "0xC7085EBBE0e385ec7Edbb7e8D421D4bFe9163DE5",
+  "privateKey": "0xb9b0a974a7ece96764c58675ca363e501cf444b61f55068c4d7afc9fee592c45"
 }
