@@ -14,6 +14,11 @@ function App() {
   const [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
 
+  const { loading, data, trigger } = useRequest({
+    key: "contractbets",
+    url: "contract/get-bets",
+  });
+
   return (
     <div className="p-4">
       <div className="pb-4 flex flex-row items-center justify-between">

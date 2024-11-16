@@ -115,9 +115,6 @@ function App() {
             className="z-10"
           />
         </div>
-
-        {/* Background shape */}
-        <div className="absolute top-20 -z-10 w-[300px] h-[300px] bg-[#FFC107] rounded-[50%] clip-path-custom" />
       </div>
 
       {/* Submit Button */}
