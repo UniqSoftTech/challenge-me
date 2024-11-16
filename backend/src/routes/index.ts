@@ -43,5 +43,6 @@ router.post('/contract/claimWinnings', authenticate, v.claimWinnings, checkValid
 
 /** openai */
 router.post("/openai/check-challengable", authenticate, v.isChallengeable, checkValid, openai.checkChallengeable);
+router.post("/openai/suggest-question", authenticate, openai.generateQuestions);
 
 export default router;
