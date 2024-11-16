@@ -1,10 +1,9 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from "cors"
-import routes from './routes';
 import http from 'http';
+import routes from './routes';
 import sequelize from './configs/db.config';
-
 
 const app = express();
 app.use(bodyParser.json());
