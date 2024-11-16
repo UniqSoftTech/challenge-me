@@ -6,6 +6,7 @@ import ethersRPC from "@/utils/ethersRPC";
 import useGlobalRequestStore from "@/hooks/useGlobalRequestStore";
 import { useRouter } from "next/router";
 import Button from "@/components/data-display/Button";
+import { IDKitWidget, VerificationLevel } from "@worldcoin/idkit";
 
 type FormDataKeys =
   | "name"
@@ -28,6 +29,7 @@ const App = () => {
   const { provider } = useWeb3Auth();
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const { execute } = useGlobalRequestStore();
+  const [type, setType] = useState(0);
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -122,7 +124,7 @@ const App = () => {
       (key) => formData[key as FormDataKeys]?.trim() !== "",
     );
 
-    console.log("🚀 ~ handleSubmit ~ isFormComplete:", isFormComplete);
+    // console.log("🚀 ~ handleSubmit ~ isFormComplete:", isFormComplete);
 
     if (!isFormComplete) {
       const newErrors: Partial<FormData> = {};
@@ -134,13 +136,28 @@ const App = () => {
       setErrors(newErrors);
       return;
     }
+    setType(1);
+  };
 
+  const handleVerifyWorldCoin = async (proof: any) => {
     await execute(
       "user",
       { method: "POST", url: "user" },
       {
-        data: { ...formData, wallet: walletAddress },
-        onSuccess: (data) => console.log("data", data),
+        data: {
+          ...formData,
+          wallet: walletAddress,
+          proof: proof?.proof,
+          age: 27,
+        },
+        onSuccess: async (result) => {
+          if (result?.data?.status) {
+            await localStorage.setItem("token", result?.data?.data?.token);
+            router.push("/app");
+          } else {
+            router.push("/verification");
+          }
+        },
         onError: (error) => console.error("error", error),
       },
     );
@@ -150,92 +167,122 @@ const App = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white gap-3">
-      {/* Header */}
-      <div className="flex flex-col pt-4 px-4">
-        <div className="mb-4">
-          <button
-            onClick={handlePrevious}
-            className={`text-lg ${step === 0 ? "invisible" : ""}`}
-          >
-            ←
-          </button>
-        </div>
-        <div className="text-black text-xl">{fields[step].title}</div>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="w-full px-4">
-        <div className="relative h-1 bg-gray-300 rounded-full">
-          <div
-            className="absolute h-1 bg-black rounded-full transition-all"
-            style={{ width: `${((step + 1) / fields.length) * 100}%` }}
-          />
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="flex-grow flex flex-col justify-center px-6 gap-1">
-        <h1 className="text-base mb-4">{currentField.label}</h1>
-
-        {currentField.type === "select" ? (
-          <select
-            id={currentField.name}
-            name={currentField.name}
-            value={formData[currentField.name as FormDataKeys]}
-            onChange={handleInputChange}
-            className={`w-full px-4 py-3 font-bold text-xl rounded-2xl border-2 ${
-              errors[currentField.name as FormDataKeys]
-                ? "border-red-500"
-                : formData[currentField.name as FormDataKeys]
-                ? "border-black"
-                : "border-gray-300"
-            } rounded focus:outline-none focus:ring-1 focus:border-black focus:ring-black`}
-          >
-            <option value="">Select...</option>
-            {currentField.options?.map((option) => (
-              <option key={option} className="font-bold text-xl" value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <input
-            id={currentField.name}
-            name={currentField.name}
-            type={currentField.type}
-            placeholder={currentField.placeholder}
-            value={formData[currentField.name as FormDataKeys]}
-            onChange={handleInputChange}
-            className={`w-full font-bold text-xl px-4 py-3 rounded-2xl border-2 ${
-              errors[currentField.name as FormDataKeys]
-                ? "border-red-500"
-                : formData[currentField.name as FormDataKeys]
-                ? "border-black"
-                : "border-gray-300"
-            } rounded focus:outline-none focus:ring-1 focus:border-black focus:ring-black`}
-          />
-        )}
-        {errors[currentField.name as FormDataKeys] && (
-          <p className="text-red-500 text-sm mt-1">
-            {errors[currentField.name as FormDataKeys]}
-          </p>
-        )}
-        <div className="flex justify-end mt-4">
-          <div className="w-1/2 flex-end">
-            {step < fields.length - 1 ? (
-              <Button
-                title="Next"
-                onPress={handleNext}
-                disabled={
-                  errors[currentField.name as FormDataKeys] ? true : false
-                }
-              />
-            ) : (
-              <Button title="Submit" onPress={handleSubmit} />
-            )}
+      {type === 1 ? (
+        <div className="flex flex-col min-h-screen justify-between p-8">
+          <div className="h-full flex flex-col justify-center flex-grow gap-4">
+            <h1 className="text-3xl font-bold">One last step!</h1>
+            <p className="text-lg">
+              We use Worldcoin to verify you're a real person.
+            </p>
+          </div>
+          <div className="flex flex-col gap-3">
+            <IDKitWidget
+              action={"verification"}
+              onError={(error) => console.log("onError: ", error)}
+              onSuccess={(response) => console.log("onSuccess: ", response)}
+              handleVerify={(proof) => handleVerifyWorldCoin(proof)}
+              app_id={"app_f33e38c15629edb15adcf97b3e3649c0"}
+              verification_level={VerificationLevel.Device}
+            >
+              {({ open }) => <Button title="Verify" onPress={open} />}
+            </IDKitWidget>
+            <p className="text-center">Verify yourself with World Coin</p>
           </div>
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Header */}
+          <div className="flex flex-col pt-4 px-4">
+            <div className="mb-4">
+              <button
+                onClick={handlePrevious}
+                className={`text-lg ${step === 0 ? "invisible" : ""}`}
+              >
+                ←
+              </button>
+            </div>
+            <div className="text-black text-xl">{fields[step].title}</div>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="w-full px-4">
+            <div className="relative h-1 bg-gray-300 rounded-full">
+              <div
+                className="absolute h-1 bg-black rounded-full transition-all"
+                style={{ width: `${((step + 1) / fields.length) * 100}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="flex-grow flex flex-col justify-center px-6 gap-1">
+            <h1 className="text-base mb-4">{currentField.label}</h1>
+
+            {currentField.type === "select" ? (
+              <select
+                id={currentField.name}
+                name={currentField.name}
+                value={formData[currentField.name as FormDataKeys]}
+                onChange={handleInputChange}
+                className={`w-full px-4 py-3 font-bold text-xl rounded-2xl border-2 ${
+                  errors[currentField.name as FormDataKeys]
+                    ? "border-red-500"
+                    : formData[currentField.name as FormDataKeys]
+                    ? "border-black"
+                    : "border-gray-300"
+                } rounded focus:outline-none focus:ring-1 focus:border-black focus:ring-black`}
+              >
+                <option value="">Select...</option>
+                {currentField.options?.map((option) => (
+                  <option
+                    key={option}
+                    className="font-bold text-xl"
+                    value={option}
+                  >
+                    {option}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                id={currentField.name}
+                name={currentField.name}
+                type={currentField.type}
+                placeholder={currentField.placeholder}
+                value={formData[currentField.name as FormDataKeys]}
+                onChange={handleInputChange}
+                className={`w-full font-bold text-xl px-4 py-3 rounded-2xl border-2 ${
+                  errors[currentField.name as FormDataKeys]
+                    ? "border-red-500"
+                    : formData[currentField.name as FormDataKeys]
+                    ? "border-black"
+                    : "border-gray-300"
+                } rounded focus:outline-none focus:ring-1 focus:border-black focus:ring-black`}
+              />
+            )}
+            {errors[currentField.name as FormDataKeys] && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors[currentField.name as FormDataKeys]}
+              </p>
+            )}
+            <div className="flex justify-end mt-4">
+              <div className="w-1/2 flex-end">
+                {step < fields.length - 1 ? (
+                  <Button
+                    title="Next"
+                    onPress={handleNext}
+                    disabled={
+                      errors[currentField.name as FormDataKeys] ? true : false
+                    }
+                  />
+                ) : (
+                  <Button title="Submit" onPress={handleSubmit} />
+                )}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

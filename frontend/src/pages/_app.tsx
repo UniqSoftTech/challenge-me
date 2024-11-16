@@ -12,6 +12,7 @@ import { initializeWeb3AuthContext } from "../context/webContext";
 import "../styles/public.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import Layout from "@/components/Layout";
 
 const font = Epilogue({
   subsets: ["latin"],
@@ -46,7 +47,9 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         <SEOHead />
         <Web3AuthProvider config={web3AuthConfig}>
           <AuthProvider>
-            <Component {...pageProps} />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
           </AuthProvider>
         </Web3AuthProvider>
       </main>
