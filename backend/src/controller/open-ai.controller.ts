@@ -57,7 +57,17 @@ export class OpenAIController {
         messages: [{ role: 'user', content: prompt }],
       });
 
-      res.status(200).json({ data: response?.choices[0].message.content.trim().split("\n"), status: true });
+      const result = response?.choices[0].message.content.trim().split("\n");
+
+      let data: any = [];
+
+      await Promise.all(result.map(async (question: string, index: number) => {
+        if (question?.trim() !== "") {
+          data.push(question.split(`${index+1}.`)[1].trim());
+        }
+      }));
+
+      res.status(200).json({ data, status: true });
     } catch (error) {
       console.error('Error generating questions:', error);
       res.status(500).json({ message: 'Internal server error', error });
