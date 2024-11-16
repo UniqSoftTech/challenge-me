@@ -21,7 +21,7 @@ const Input: React.FC<InputProps> = ({
   disabled = false,
 }) => {
   return (
-    <div className="mb-4">
+    <div className="">
       <input
         id={name}
         name={name}
@@ -30,7 +30,7 @@ const Input: React.FC<InputProps> = ({
         onChange={onChange}
         placeholder={placeholder}
         disabled={disabled}
-        className={`w-full px-4 py-2 border-2 text-black rounded-2xl border-gray-400 focus:border-black ring:border-black ${
+        className={`w-full px-4 py-2 border-2 text-black rounded-2xl border-gray-400 focus:border-black hover:border-black ring:border-black ${
           disabled ? "bg-gray-100 cursor-not-allowed" : ""
         }`}
       />

@@ -6,8 +6,9 @@ import ReusableModal from "@/components/data-display/Modal";
 import useGlobalRequestStore from "@/hooks/useGlobalRequestStore";
 import useRequest from "@/hooks/useRequest";
 import { useState } from "react";
-import { Plus } from "@phosphor-icons/react";
+import { Plus, Minus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
+import Slider from "@/components/data-display/Slider";
 
 function App() {
   const [isOpen, setIsOpen] = useState(true);
@@ -48,6 +49,35 @@ function App() {
           </div>
         </div>
         <div className="text-sm">13 Votes</div>
+        <div className="flex flex-row gap-2">
+          <Button title="Yes" onPress={() => console.log("haha")} />
+          <Button
+            title="No"
+            className="bg-red-400"
+            onPress={() => console.log("haha")}
+          />
+        </div>
+        <div>
+          <h2>Choose the amount you want to stake</h2>
+          <div className="flex flex-row gap-3 items-center py-4 self-center">
+            <button className="p-3 bg-gray-200 rounded-full">
+              <Minus />
+            </button>
+            <div className="flex-grow items-center justify-center">
+              <Input placeholder="0.00" />
+            </div>
+            <button className="p-3 bg-gray-200 rounded-full">
+              <Plus />
+            </button>
+          </div>
+          <div className="py-4">
+            <Slider />
+          </div>
+          <div className="flex flex-col gap-4 pt-4">
+            <Input placeholder="Leave a message" />
+            <Button title="Confirm" onPress={() => console.log("haha")} />
+          </div>
+        </div>
         <div className="px-3 py-3 border rounded-xl flex flex-col gap-1">
           <div className="flex flex-row items-center gap-2">
             <div className="h-5 w-5 rounded-full bg-black" />
