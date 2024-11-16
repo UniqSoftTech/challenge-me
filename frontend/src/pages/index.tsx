@@ -1,23 +1,14 @@
 "use client";
 
-import {
-  CHAIN_NAMESPACES,
-  IAdapter,
-  IProvider,
-  WEB3AUTH_NETWORK,
-} from "@web3auth/base";
+import { IAdapter, IProvider, WEB3AUTH_NETWORK } from "@web3auth/base";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { getDefaultExternalAdapters } from "@web3auth/default-evm-adapter";
 import { Web3Auth, Web3AuthOptions } from "@web3auth/modal";
 import { useEffect, useState } from "react";
 import { chainConfig, clientId } from "../utils/chainUtils";
 import ethersRPC from "@/utils/ethersRPC";
-import {
-  IDKitWidget,
-  ISuccessResult,
-  IVerifyResponse,
-  VerificationLevel,
-} from "@worldcoin/idkit";
+import { IDKitWidget, VerificationLevel } from "@worldcoin/idkit";
+import { useAuth } from "@/context/authContext";
 
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: { chainConfig },
@@ -31,6 +22,7 @@ const web3AuthOptions: Web3AuthOptions = {
 const web3auth = new Web3Auth(web3AuthOptions);
 
 function App() {
+  const { walletAddress, setWalletAddress } = useAuth();
   const [provider, setProvider] = useState<IProvider | null>(null);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -62,6 +54,7 @@ function App() {
     setProvider(web3authProvider);
     if (web3auth.connected) {
       setLoggedIn(true);
+      getAccounts();
     }
   };
 
@@ -70,7 +63,7 @@ function App() {
       return;
     }
     const address = await ethersRPC.getAccounts(provider);
-    console.log("🚀 ~ getAccounts ~ address:", address);
+    setWalletAddress(address);
   };
 
   const logout = async () => {
