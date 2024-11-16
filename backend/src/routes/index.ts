@@ -31,11 +31,15 @@ router.get('/room/user', authenticate, room.getUserRooms);
 router.post('/room-member/join', authenticate, v.joinRoom, checkValid, roomMember.joinRoom);
 
 /** contract */
+router.post('/contract/abi-json', authenticate, contract.getABI);
+router.post('/contract/tnx-info', authenticate, contract.getTnxData);
 router.get('/contract/get-bets', authenticate, contract.getMarketInfo);
 router.post('/contract/vote', authenticate, v.vote, checkValid, contract.vote);
+router.post('/contract/search-token', authenticate, contract.getTokensBySearch);
 router.post('/contract/placeBet', authenticate, v.placeBet, checkValid, contract.placeBet);
 router.post('/contract/createMarket', authenticate, v.createMarket, checkValid, contract.createMarket);
 router.post('/contract/claimWinnings', authenticate, v.claimWinnings, checkValid, contract.claimWinnings);
+
 
 /** openai */
 router.post("/openai/check-challengable", authenticate, v.isChallengeable, checkValid, openai.checkChallengeable);

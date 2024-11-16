@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { ethers } from 'ethers';
 import { contract_address, json_rpc_url, private_key } from '../configs/config';
-import { serializeBigInt } from '../utils/func.untils';
+import { getABI, getTransactions, searchTokens } from '../utils/func.untils';
 
 // Your contract's ABI (from the JSON you provided)
 const contractABI = [
@@ -400,5 +400,30 @@ export class ContractController {
     }
   }
 
-  
+  getTnxData = async (req: any, res: any) => {
+    try {
+      const data = await getTransactions(req?.body?.address);
+      res.status(200).send({ status: true, data });
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  }
+
+  getTokensBySearch = async (req: any, res: any) => {
+    try {
+      const data = await searchTokens(req?.body?.query);
+      res.status(200).send({ status: true, data });
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  }
+
+  getABI = async (req: any, res: any) => {
+    try {
+      const data = await getABI(req?.body?.address);
+      res.status(200).send({ status: true, data });
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  }
 }
