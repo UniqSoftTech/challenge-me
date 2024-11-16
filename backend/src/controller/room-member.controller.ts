@@ -1,7 +1,7 @@
 import db from "../models/_index";
 import { Request, Response } from 'express';
 
-export class UserController {
+export class RoomMemberController {
   create = async (req: Request, res: Response) => {
     try {
       await db.RoomMember.create(req.body);
