@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@nextui-org/modal": "^2.0.41",
+    "@nextui-org/react": "^2.4.8",
+    "@nextui-org/system": "^2.2.6",
+    "@nextui-org/theme": "^2.2.11",
     "@web3auth/base": "^9.4.0",
     "@web3auth/default-evm-adapter": "^9.4.0",
     "@web3auth/ethereum-provider": "^9.4.0",
