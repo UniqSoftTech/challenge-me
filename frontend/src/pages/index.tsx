@@ -10,10 +10,14 @@ import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { getDefaultExternalAdapters } from "@web3auth/default-evm-adapter";
 import { Web3Auth, Web3AuthOptions } from "@web3auth/modal";
 import { useEffect, useState } from "react";
-
-import RPC from "../utils/ethersRPC";
 import { chainConfig, clientId } from "../utils/chainUtils";
-import { IDKitWidget, ISuccessResult } from "@worldcoin/idkit";
+import ethersRPC from "@/utils/ethersRPC";
+import {
+  IDKitWidget,
+  ISuccessResult,
+  IVerifyResponse,
+  VerificationLevel,
+} from "@worldcoin/idkit";
 
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: { chainConfig },
@@ -61,35 +65,35 @@ function App() {
     }
   };
 
-  const getUserInfo = async () => {
-    const user = await web3auth.getUserInfo();
-    uiConsole(user);
+  const getAccounts = async () => {
+    if (!provider) {
+      return;
+    }
+    const address = await ethersRPC.getAccounts(provider);
+    console.log("🚀 ~ getAccounts ~ address:", address);
   };
 
   const logout = async () => {
     await web3auth.logout();
     setProvider(null);
     setLoggedIn(false);
-    uiConsole("logged out");
-  };
-
-  function uiConsole(...args: any[]): void {
-    const el = document.querySelector("#console>p");
-    if (el) {
-      el.innerHTML = JSON.stringify(args || {}, null, 2);
-      console.log(...args);
-    }
-  }
-
-  const handleVerify = async (proof: ISuccessResult) => {
-    console.log("🚀 ~ handleVerify ~ proof:", proof);
   };
 
   const loggedInView = (
     <>
       <div className="flex-container">
+        <IDKitWidget
+          action={"verification"}
+          onError={(error) => console.log("onError: ", error)}
+          onSuccess={(response) => console.log("onSuccess: ", response)}
+          handleVerify={(proof) => console.log("proof", proof)}
+          app_id={"app_f33e38c15629edb15adcf97b3e3649c0"}
+          verification_level={VerificationLevel.Device}
+        >
+          {({ open }) => <button onClick={open}>Open IDKit</button>}
+        </IDKitWidget>
         <div>
-          <button onClick={getUserInfo} className="card">
+          <button onClick={getAccounts} className="card">
             Get User Info
           </button>
         </div>
