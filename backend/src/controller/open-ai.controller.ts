@@ -34,7 +34,7 @@ export class OpenAIController {
 
   // Function to generate funny, measurable, and betting-able questions
   generateQuestions = async (req: any, res: any) => {
-    const user = await db.Users.findOne({ where: { id: req?.user?.id } })    
+    const user = await db.Users.findOne({ where: { id: req?.user?.id } })
     if (!user) return res.status(404).json({ message: 'User not found' })
 
     const prompt = `
