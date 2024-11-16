@@ -1,0 +1,8 @@
+{
+  "network": "testnet",
+  "contracts": {
+    "HelloWorld": "./HelloWorld.cdc"
+  },
+  "account": "0xYourAccountAddress",
+  "privateKey": "6f19f7f109de2a067e2ba84a9de8f16b01907b62db70cb6f9b82d35b12d86485"
+}

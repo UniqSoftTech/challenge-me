@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 import db from '../models/_index';
 
-
-
 export class RoomController {
 
   create = async (req: any, res: any) => {

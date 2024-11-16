@@ -1,6 +1,6 @@
 import db from "../models/_index";
 import { Request, Response } from 'express';
-import { generateToken } from "../utils/jwt.utils";
+import { generateToken, getTokenToUserId } from "../utils/jwt.utils";
 
 export class UserController {
   create = async (req: Request, res: Response) => {
@@ -13,9 +13,10 @@ export class UserController {
     }
   };
 
-  put = async (req: any, res: Response) => {
+  put = async (req: Request, res: Response) => {
     try {
-      const user = await db.Users.findByPk(req.user.id);
+      const userId = getTokenToUserId(req);
+      const user = await db.Users.findByPk(userId);
 
       if (!user)
         return res.status(404).json({ message: 'User not found' });
