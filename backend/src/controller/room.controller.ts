@@ -23,7 +23,7 @@ export class RoomController {
     }
   };
 
-  getUserRooms = async (req: any, res: any) => {
+  getUserRooms = async (req: any, res: Response) => {
     try {
       const myCreatedRooms = await db.Room.findAll({ where: { created_by: req?.user?.id } });
       const myJoinedRooms = await db.RoomMember.findAll({ where: { user_id: req?.user?.id }, include: [{ model: db.Room, as: 'room' }] });
@@ -34,7 +34,6 @@ export class RoomController {
         const item = x.toJSON();
         data.push(item.room);
       }))
-
 
       res.status(200).json({ status: true, data });
     } catch (error) {
