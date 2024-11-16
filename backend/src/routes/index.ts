@@ -35,6 +35,7 @@ router.post('/contract/claimWinnings', authenticate, v.claimWinnings, checkValid
 router.post('/contract/createMarket', authenticate, v.createMarket, checkValid, contract.createMarket);
 router.post('/contract/placeBet', authenticate, v.placeBet, checkValid, contract.placeBet);
 router.post('/contract/vote', authenticate, v.vote, checkValid, contract.vote);
+router.get('/contract/get-bets', authenticate, contract.getMarketInfo);
 
 /** openai */
 router.post("/openai/check-challengable", authenticate, v.isChallengeable, checkValid, openai.checkChallengeable);

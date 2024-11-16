@@ -45,6 +45,52 @@ const contractABI = [
   },
   {
     "type": "function",
+    "name": "getMarketInfoForAddress",
+    "inputs": [
+      {
+        "name": "_address",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple[]",
+        "internalType": "struct MinimumPolymarket.MarketInfo[]",
+        "components": [
+          {
+            "name": "marketId",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "question",
+            "type": "string",
+            "internalType": "string"
+          },
+          {
+            "name": "isCreator",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "isYesVoter",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "isNoVoter",
+            "type": "bool",
+            "internalType": "bool"
+          }
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "markets",
     "inputs": [
       {
@@ -73,6 +119,11 @@ const contractABI = [
         "name": "noAmount",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "marketCreator",
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "yesVote",
@@ -313,5 +364,26 @@ export class ContractController {
         error: error,
       });
     }
+  };
+
+  getMarketInfo = async (req: any, res: any) => {
+    const address = req?.user?.wallet;
+
+    try {
+      // Call the smart contract's `getMarketInfoForAddress` function
+      const marketInfo = await this.contract.getMarketInfoForAddress(address);
+      console.log("🚀 ~ ContractController ~ getMarketInfo= ~ marketInfo:", marketInfo)
+      marketInfo.map((market: any) => {
+        console.log("🚀 ~ ContractController ~ marketInfo.map ~ market:", market)
+        
+      })
+
+      // Return the data to the client
+      res.status(200).json({ marketInfo: JSON.stringify(marketInfo) });
+    } catch (error) {
+      console.error('Error fetching market info:', error);
+      res.status(500).json({ message: 'Error fetching market information', error: error });
+    }
   }
+
 }

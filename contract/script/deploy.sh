@@ -22,5 +22,5 @@ forge create src/MinimumPolymarket.sol:MinimumPolymarket --rpc-url $SEPOLIA_RPC_
 # forge verify-contract --rpc-url https://testnet.evm.nodes.onflow.org/ \
 #     --verifier blockscout \
 #     --verifier-url https://evm-testnet.flowscan.io/api \
-#     0x984353689a09f900660548feE4160bFA6a281ACb \
+#     0xC80eA55cEB01f0ea110AC518895e356bdb67AfFe \
 #     src/MinimumPolymarket.sol:MinimumPolymarket

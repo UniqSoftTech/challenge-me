@@ -1,8 +1,8 @@
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
 contract MinimumPolymarket {
+
     struct Market {
         string question;
         bool isResolved;
@@ -10,8 +10,19 @@ contract MinimumPolymarket {
         uint256 noAmount;
         mapping(address => uint256) yesPositions;
         mapping(address => uint256) noPositions;
-        mapping(address => bool) hasVoted;
+        address[] yesVoters;    // Array of addresses that voted yes
+        address[] noVoters;     // Array of addresses that voted no
+        address marketCreator;  // The address that created the market
         bool yesVote;
+    }
+
+    // Define a struct to store the market info for a specific address
+    struct MarketInfo {
+        uint256 marketId;
+        string question;
+        bool isCreator;
+        bool isYesVoter;
+        bool isNoVoter;
     }
 
     uint256 public currentMarketId;
@@ -26,6 +37,7 @@ contract MinimumPolymarket {
         Market storage market = markets[marketId];
 
         market.question = _question;
+        market.marketCreator = msg.sender; // Set the creator of the market
 
         emit MarketCreated(marketId, _question);
     }
@@ -38,9 +50,11 @@ contract MinimumPolymarket {
         if (_isYes) {
             market.yesAmount += msg.value;
             market.yesPositions[msg.sender] += msg.value;
+            market.yesVoters.push(msg.sender); // Add the address to yesVoters
         } else {
             market.noAmount += msg.value;
             market.noPositions[msg.sender] += msg.value;
+            market.noVoters.push(msg.sender); // Add the address to noVoters
         }
 
         emit BetPlaced(_marketId, msg.sender, _isYes, msg.value);
@@ -54,6 +68,56 @@ contract MinimumPolymarket {
         market.isResolved = true;
 
         emit MarketResolved(_marketId, _votedYes);
+    }
+
+    // Function to get the market info for an address
+    function getMarketInfoForAddress(address _address) external view returns (MarketInfo[] memory) {
+        MarketInfo[] memory marketInfoArray = new MarketInfo[](currentMarketId);
+        uint256 marketCount = 0;
+
+        // Loop through all markets and check the given address
+        for (uint256 marketId = 0; marketId < currentMarketId; marketId++) {
+            Market storage market = markets[marketId];
+
+            bool isCreator = false;
+            bool isYesVoter = false;
+            bool isNoVoter = false;
+
+            // Check if the address is the market creator
+            if (market.marketCreator == _address) {
+                isCreator = true;
+            }
+
+            // Check if the address voted "yes"
+            for (uint256 i = 0; i < market.yesVoters.length; i++) {
+                if (market.yesVoters[i] == _address) {
+                    isYesVoter = true;
+                    break;
+                }
+            }
+
+            // Check if the address voted "no"
+            for (uint256 i = 0; i < market.noVoters.length; i++) {
+                if (market.noVoters[i] == _address) {
+                    isNoVoter = true;
+                    break;
+                }
+            }
+
+            // If the address is involved in the market, add it to the array
+            if (isCreator || isYesVoter || isNoVoter) {
+                marketInfoArray[marketCount] = MarketInfo({
+                    marketId: marketId,
+                    question: market.question,
+                    isCreator: isCreator,
+                    isYesVoter: isYesVoter,
+                    isNoVoter: isNoVoter
+                });
+                marketCount++;
+            }
+        }
+
+        return marketInfoArray;
     }
 
     function claimWinnings(uint256 _marketId) external {
