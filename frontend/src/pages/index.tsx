@@ -7,9 +7,7 @@ import { Web3Auth, Web3AuthOptions } from "@web3auth/modal";
 import { useEffect, useState } from "react";
 import { chainConfig, clientId } from "../utils/chainUtils";
 import ethersRPC from "@/utils/ethersRPC";
-import { IDKitWidget, VerificationLevel } from "@worldcoin/idkit";
 import { useAuth } from "@/context/authContext";
-import Button from "@/components/data-display/Button";
 import { useRouter } from "next/router";
 import useGlobalRequestStore from "@/hooks/useGlobalRequestStore";
 import Image from "next/image";
@@ -32,10 +30,12 @@ function App() {
 
   const { walletAddress, setWalletAddress } = useAuth();
   const [provider, setProvider] = useState<IProvider | null>(null);
+  const [isLoading, setIsLoading] = useState(true); // Loading state
 
   useEffect(() => {
     const init = async () => {
       try {
+        setIsLoading(true); // Set loading to true while initializing
         const adapters = await getDefaultExternalAdapters({
           options: web3AuthOptions,
         });
@@ -46,10 +46,12 @@ function App() {
         setProvider(web3auth.provider);
 
         if (web3auth.connected) {
-          // setLoggedIn(true);
+          // Optional: Perform post-login actions here
         }
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false); // Set loading to false after initialization
       }
     };
 
@@ -58,9 +60,7 @@ function App() {
 
   const login = async () => {
     const web3authProvider = await web3auth.connect();
-    console.log("🚀 ~ login ~ web3authProvider:", web3authProvider);
     setProvider(web3authProvider);
-    console.log("🚀 ~ login ~ web3auth:", web3auth);
 
     if (web3auth.connected) {
       const address = await getAccounts();
@@ -95,22 +95,7 @@ function App() {
   const logout = async () => {
     await web3auth.logout();
     setProvider(null);
-    // setLoggedIn(false);
   };
-
-  const handleWorldCoinVerify = (proof: any) => {
-    console.log("🚀 ~ handleWorldCoinVerify ~ proof:", proof);
-    // router.push("/verification");
-  };
-
-  const unloggedInView = (
-    <button
-      onClick={login}
-      className="px-8 py-4 bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105 active:scale-95 focus:outline-none"
-    >
-      Login with Web3Auth
-    </button>
-  );
 
   return (
     <div className="flex flex-col min-h-screen bg-[#00D084] text-black">
@@ -139,9 +124,14 @@ function App() {
       <div className="flex justify-center px-4 pb-8">
         <button
           onClick={login}
-          className="px-8 w-full py-4 bg-black text-white text-xl font-semibold rounded-lg shadow-lg hover:bg-gray-800 transition"
+          className={`px-8 w-full py-4 text-xl font-semibold rounded-lg shadow-lg transition ${
+            isLoading
+              ? "bg-gray-200 cursor-not-allowed"
+              : "bg-black text-white hover:bg-gray-800"
+          }`}
+          disabled={isLoading} // Disable button while loading
         >
-          Connect Your Wallet
+          {isLoading ? "Loading..." : "Connect Your Wallet"}
         </button>
       </div>
     </div>
