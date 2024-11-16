@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from "cors"
-import db from './models/_index';
+import routes from './routes';
 
 const app = express();
 const port = 3000;
@@ -14,20 +14,13 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 }));
 
+app.use("/", routes);
+
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello, TypeScript and Express!');
+  res.send(new Date());
 });
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
 
-app.post('/post', async (req: Request, res: Response) => {
-  try {
-
-    await db.Users.create(req.body);
-    res.status(201).json({ message: 'User created successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Internal server error', error });
-  }
-});
