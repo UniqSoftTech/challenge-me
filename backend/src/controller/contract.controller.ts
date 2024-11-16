@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import { ethers } from 'ethers';
 import { contract_address, json_rpc_url, private_key } from '../configs/config';
 import { getABI, getTransactions, searchTokens } from '../utils/func.untils';
+import { ChallengeController } from './challenge.controller';
+import db from '../models/_index';
 
 // Your contract's ABI (from the JSON you provided)
 const contractABI = [
@@ -256,6 +258,7 @@ export class ContractController {
   private provider = new ethers.JsonRpcProvider(json_rpc_url);
   private wallet = new ethers.Wallet(this.privateKey, this.provider);
   private contract = new ethers.Contract(this.contractAddress, contractABI, this.wallet);
+  private challenge = new ChallengeController();
 
   // // Listen for MarketCreated Event
   // this.contract.on('MarketCreated', (marketId: ethers.BigNumber, question: string) => {
@@ -303,7 +306,6 @@ export class ContractController {
   createMarket = async (req: Request, res: Response) => {
     try {
       const { question } = req.body;
-
       // Call createMarket on your contract
       const tx = await this.contract.createMarket(question);
 
@@ -313,7 +315,7 @@ export class ContractController {
       res.status(200).json({
         message: 'Market created successfully',
         data: {
-          transactionHash: receipt.transactionHash,
+          transactionHash: JSON.stringify(receipt),
         }
       });
     } catch (error) {
@@ -393,7 +395,8 @@ export class ContractController {
       }))
 
       // Return the data to the client
-      res.status(200).json({ data, status: true });
+      const temp = await db.Challenge.findAll({ where: { created_by: req?.user?.id } });
+      res.status(200).json({ data: temp, status: true });
     } catch (error) {
       console.error('Error fetching market info:', error);
       res.status(500).json({ message: 'Error fetching market information', error: error });
