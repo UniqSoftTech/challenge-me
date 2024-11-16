@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { ethers } from 'ethers';
+import { contract_address, json_rpc_url, private_key } from '../configs/config';
 
 // Your contract's ABI (from the JSON you provided)
 const contractABI = [
@@ -189,9 +190,10 @@ const contractABI = [
 ]
 
 export class ContractController {
-  private contractAddress = "0x31dE00280A9DD51a0e66CBF1Ec2014AF36320EDF";
-  private provider = new ethers.JsonRpcProvider('https://base-sepolia.g.alchemy.com/v2/tm10MbToT7jZoizxEnsOGVjkIKryh4-u');
-  private privateKey = '6f19f7f109de2a067e2ba84a9de8f16b01907b62db70cb6f9b82d35b12d86485';
+  private contractAddress = contract_address;
+  private privateKey = private_key;
+
+  private provider = new ethers.JsonRpcProvider(json_rpc_url);
   private wallet = new ethers.Wallet(this.privateKey, this.provider);
   private contract = new ethers.Contract(this.contractAddress, contractABI, this.wallet);
 
@@ -207,7 +209,10 @@ export class ContractController {
 
       res.status(200).json({
         message: 'Winnings claimed successfully',
-        transactionHash: receipt.transactionHash,
+        data: {
+          transactionHash: receipt.transactionHash,
+
+        }
       });
     } catch (error) {
       res.status(500).json({
@@ -229,7 +234,9 @@ export class ContractController {
 
       res.status(200).json({
         message: 'Market created successfully',
-        transactionHash: receipt.transactionHash,
+        data: {
+          transactionHash: receipt.transactionHash,
+        }
       });
     } catch (error) {
       res.status(500).json({
@@ -239,23 +246,52 @@ export class ContractController {
     }
   }
 
-  currentMarketId = async (req: Request, res: Response) => {
+  placeBet = async (req: Request, res: Response) => {
     try {
-      const { marketId } = req.body;
+      const { marketId, _isYes, amountInEther } = req.body;
 
-      // Call currentMarketId on your contract
-      const tx = await this.contract.currentMarketId();
+      // Convert amountInEther to wei (since Ethereum uses wei for small units)
+      const amountInWei = ethers.parseEther(amountInEther.toString());
 
-      // Wait for transaction to be mined
+      // Call placeBet on the contract with the specified amount (msg.value) and other parameters
+      const tx = await this.contract.placeBet(marketId, _isYes, { value: amountInWei });
+
+      // Wait for the transaction to be mined
       const receipt = await tx.wait();
 
       res.status(200).json({
-        message: 'Market created successfully',
-        transactionHash: receipt.transactionHash,
+        message: 'Bet placed successfully',
+        data: {
+          transactionHash: receipt.transactionHash,
+        }
       });
     } catch (error) {
       res.status(500).json({
-        message: 'Error creating market',
+        message: 'Error placing bet',
+        error: error,
+      });
+    }
+  };
+
+  vote = async (req: Request, res: Response) => {
+    try {
+      const { marketId, _votedYes } = req.body;  // Get marketId and _votedYes from request body
+
+      // Call vote function on the contract
+      const tx = await this.contract.vote(marketId, _votedYes);
+
+      // Wait for the transaction to be mined
+      const receipt = await tx.wait();
+
+      res.status(200).json({
+        message: 'Vote submitted successfully',
+        data: {
+          transactionHash: receipt.transactionHash
+        },
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: 'Error submitting vote',
         error: error,
       });
     }

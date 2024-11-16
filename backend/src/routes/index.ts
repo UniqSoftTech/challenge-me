@@ -30,6 +30,7 @@ router.post('/room-member', roomMember.create);
 /** contract */
 router.post('/contract/claimWinnings', contract.claimWinnings);
 router.post('/contract/createMarket', contract.createMarket);
-router.post('/contract/currentMarketId', contract.currentMarketId);
+router.post('/contract/placeBet', contract.placeBet);
+router.post('/contract/vote', contract.vote);
 
 export default router;
