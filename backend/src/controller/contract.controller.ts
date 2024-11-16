@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { ethers } from 'ethers';
 import { contract_address, json_rpc_url, private_key } from '../configs/config';
+import { serializeBigInt } from '../utils/func.untils';
 
 // Your contract's ABI (from the JSON you provided)
 const contractABI = [
@@ -240,6 +241,14 @@ const contractABI = [
   }
 ]
 
+interface MarketInfo {
+  marketId: bigint;
+  question: string;
+  isCreator: boolean;
+  isYesVoter: boolean;
+  isNoVoter: boolean;
+};
+
 export class ContractController {
   private contractAddress = contract_address;
   private privateKey = private_key;
@@ -371,19 +380,25 @@ export class ContractController {
 
     try {
       // Call the smart contract's `getMarketInfoForAddress` function
-      const marketInfo = await this.contract.getMarketInfoForAddress(address);
-      console.log("🚀 ~ ContractController ~ getMarketInfo= ~ marketInfo:", marketInfo)
-      marketInfo.map((market: any) => {
-        console.log("🚀 ~ ContractController ~ marketInfo.map ~ market:", market)
-        
-      })
+      const marketInfo: MarketInfo[] = await this.contract.getMarketInfoForAddress(address);
+
+      const data = await Promise.all(marketInfo.map((market: any) => {
+        return {
+          marketId: market[0].toString(),  // Convert BigInt to string
+          question: market[1],
+          isCreator: market[2],
+          isYesVoter: market[3],
+          isNoVoter: market[4],
+        };
+      }))
 
       // Return the data to the client
-      res.status(200).json({ marketInfo: JSON.stringify(marketInfo) });
+      res.status(200).json({ data, status: true });
     } catch (error) {
       console.error('Error fetching market info:', error);
       res.status(500).json({ message: 'Error fetching market information', error: error });
     }
   }
 
+  
 }
