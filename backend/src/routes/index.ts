@@ -21,16 +21,17 @@ router.post('/user/signin', v.signin, checkValid, user.signin);
 router.put('/user', authenticate, v.updateUser, checkValid, user.put);
 
 /** room */
-router.post('/room', room.create);
+router.post('/room', authenticate, room.create);
+router.get('/room', authenticate, room.get);
 router.get('/user-rooms', authenticate, room.getUserRooms);
 
 /** room member */
 router.post('/room-member', roomMember.create);
 
 /** contract */
-router.post('/contract/claimWinnings', contract.claimWinnings);
-router.post('/contract/createMarket', contract.createMarket);
-router.post('/contract/placeBet', contract.placeBet);
-router.post('/contract/vote', contract.vote);
+router.post('/contract/claimWinnings', authenticate, v.claimWinnings, checkValid, contract.claimWinnings);
+router.post('/contract/createMarket', authenticate, v.createMarket, checkValid, contract.createMarket);
+router.post('/contract/placeBet', authenticate, v.placeBet, checkValid, contract.placeBet);
+router.post('/contract/vote', authenticate, v.vote, checkValid, contract.vote);
 
 export default router;

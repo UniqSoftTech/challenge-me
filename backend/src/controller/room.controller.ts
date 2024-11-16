@@ -2,16 +2,22 @@ import { Request, Response } from 'express';
 import db from '../models/_index';
 
 export class RoomController {
-
   create = async (req: any, res: any) => {
     try {
       const { name } = req.body
-      const data = await db.Room.create({
-        name,
-        created_by: 1,
-        created_at: new Date(),
-      });
-      res.status(200).send(data);
+
+      await db.Room.create({ name: name, created_by: req?.user?.id, created_at: new Date() });
+      res.status(200).send({ status: true });
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  };
+
+  get = async (req: any, res: any) => {
+    try {
+
+      const data = await db.Room.findAll();
+      res.status(200).send({ status: true, data });
     } catch (error) {
       return res.status(500).send(error);
     }

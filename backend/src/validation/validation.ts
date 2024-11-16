@@ -24,3 +24,23 @@ export const updateUser: ValidationChain[] = [
 export const signin: ValidationChain[] = [
   body('wallet').notEmpty().withMessage("wallet is required"),
 ];
+
+export const claimWinnings: ValidationChain[] = [
+  body('marketId').notEmpty().withMessage("marketId is required"),
+];
+
+export const createMarket: ValidationChain[] = [
+  body('question').notEmpty().withMessage("question is required"),
+];
+
+export const placeBet: ValidationChain[] = [
+  body('marketId').notEmpty().withMessage("marketId is required"),
+  body('_isYes').notEmpty().withMessage("_isYes is required"),
+  body('amountInEther').notEmpty().withMessage("amountInEther is required"),
+];
+
+
+export const vote: ValidationChain[] = [
+  body('marketId').notEmpty().withMessage("marketId is required"),
+  body('_votedYes').notEmpty().withMessage("_votedYes is required"),
+];
