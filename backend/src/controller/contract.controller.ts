@@ -197,6 +197,24 @@ export class ContractController {
   private wallet = new ethers.Wallet(this.privateKey, this.provider);
   private contract = new ethers.Contract(this.contractAddress, contractABI, this.wallet);
 
+  // // Listen for MarketCreated Event
+  // this.contract.on('MarketCreated', (marketId: ethers.BigNumber, question: string) => {
+  //   console.log(`Market Created: ID ${marketId.toString()}, Question: ${question}`);
+  //   // You can send this data to the frontend or process it further here.
+  // });
+
+  // // Listen for BetPlaced Event
+  // this.contract.on('BetPlaced', (marketId: ethers.BigNumber, better: string, isYes: boolean, amount: ethers.BigNumber) => {
+  //   console.log(`Bet Placed: Market ID ${marketId.toString()}, Better: ${better}, Is Yes: ${isYes}, Amount: ${ethers.utils.formatEther(amount)} ETH`);
+  //   // Process or notify the user about the bet placed
+  // });
+
+  // // Listen for MarketResolved Event
+  // this.contract.on('MarketResolved', (marketId: ethers.BigNumber, resolvedYes: boolean) => {
+  //   console.log(`Market Resolved: Market ID ${marketId.toString()}, Resolved Yes: ${resolvedYes}`);
+  //   // Handle the resolution logic (e.g., notify users about the outcome)
+  // });
+
   claimWinnings = async (req: Request, res: Response) => {
     try {
       const { marketId } = req.body;
