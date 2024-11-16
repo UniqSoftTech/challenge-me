@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { auth_key } from '../config/env.config';
+import { auth_key } from '../configs/config';
 
 export function verifyToken(token: string) {
   try {
