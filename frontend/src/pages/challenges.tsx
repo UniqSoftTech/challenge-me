@@ -13,6 +13,9 @@ import Slider from "@/components/data-display/Slider";
 function App() {
   const [isOpen, setIsOpen] = useState(true);
   const router = useRouter();
+  const [price, setPrice] = useState(0);
+  const [message, setMessage] = useState("");
+  const [isShowPrice, setIsShowPrice] = useState(false);
 
   const { loading, data, trigger } = useRequest({
     key: "contractbets",
@@ -32,8 +35,12 @@ function App() {
         </button>
       </div>
       <div className="flex flex-col gap-4 p-4 border rounded-2xl shadow-[3px_3px_0px_#94a3b8]">
+        <h2 className="text-sm">Gainers Club</h2>
         <div className="flex flex-row justify-between border-b pb-2">
-          <h1 className="text-sm font-bold">Djon Zena</h1>
+          <div className="flex flex-row items-center gap-2">
+            <div className="h-5 w-5 bg-black rounded-full" />
+            <h1 className="text-sm font-bold">Djon Zena</h1>
+          </div>
           <p className="text-sm">10 day remaining</p>
         </div>
 
@@ -55,46 +62,56 @@ function App() {
         </div>
         <div className="text-sm">13 Votes</div>
         <div className="flex flex-row gap-2">
-          <Button title="Yes" onPress={() => console.log("haha")} />
+          <Button title="Yes" onPress={() => setIsShowPrice(!isShowPrice)} />
           <Button
             title="No"
             className="bg-red-400"
-            onPress={() => console.log("haha")}
+            onPress={() => setIsShowPrice(!isShowPrice)}
           />
         </div>
-        <div>
-          <h2>Choose the amount you want to stake</h2>
-          <div className="flex flex-row gap-3 items-center py-4 self-center">
-            <button className="p-3 bg-gray-200 rounded-full">
-              <Minus />
-            </button>
-            <div className="flex-grow items-center justify-center">
+        {isShowPrice && (
+          <div>
+            <h2>Choose the amount you want to stake</h2>
+            <div className="flex flex-row gap-3 items-center py-4 self-center">
+              <button
+                onClick={() => setPrice(price - 1)}
+                disabled={price < 0 || price === 0}
+                className="p-3 bg-gray-200 rounded-full"
+              >
+                <Minus />
+              </button>
+              <div className="flex-grow items-center justify-center">
+                <Input
+                  value={price}
+                  placeholder="0.00"
+                  label="price"
+                  name="price"
+                  onChange={(e: any) => setPrice(e.target.value)}
+                />
+              </div>
+              <button
+                onClick={() => setPrice(price + 1)}
+                disabled={price > 49 || price === 50}
+                className="p-3 bg-gray-200 rounded-full"
+              >
+                <Plus />
+              </button>
+            </div>
+            <div className="py-4">
+              <Slider price={price} setPrice={setPrice} />
+            </div>
+            <div className="flex flex-col gap-4 pt-4">
               <Input
-                value={0}
-                placeholder="0.00"
+                value={message}
+                placeholder="Leave a message"
                 label="price"
                 name="price"
-                onChange={() => console.log("haha")}
+                onChange={(e: any) => setMessage(e.target.value)}
               />
+              <Button title="Confirm" onPress={() => console.log("haha")} />
             </div>
-            <button className="p-3 bg-gray-200 rounded-full">
-              <Plus />
-            </button>
           </div>
-          <div className="py-4">
-            <Slider />
-          </div>
-          <div className="flex flex-col gap-4 pt-4">
-            <Input
-              value={""}
-              placeholder="Leave a message"
-              label="price"
-              name="price"
-              onChange={() => console.log("haha")}
-            />
-            <Button title="Confirm" onPress={() => console.log("haha")} />
-          </div>
-        </div>
+        )}
         <div className="px-3 py-3 border rounded-xl flex flex-col gap-1">
           <div className="flex flex-row items-center gap-2">
             <div className="h-5 w-5 rounded-full bg-black" />

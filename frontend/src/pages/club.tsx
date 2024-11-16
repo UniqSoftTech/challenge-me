@@ -31,15 +31,21 @@ function App() {
           <h1>Create</h1>
         </button>
       </div>
-      <div className="flex flex-col relative overflow-hidden gap-2 p-5 border-2 border-black bg-primary rounded-2xl shadow-[3px_3px_0px_#94a3b8]">
-        <div className="absolute right-[-45%] bottom-[-40%]">
-          <Image src={Shape} alt="Shape" />
-        </div>
-        <h1 className="text-lg z-10 font-bold">Gainers Club</h1>
-        <div className="flex flex-row gap-3 text-sm">
-          <p>8 Challenges</p>
-          <p>6 Members</p>
-        </div>
+      <div className="flex flex-col gap-3">
+        {data?.data?.map((club: any, index: number) => {
+          return (
+            <div className="flex flex-col relative overflow-hidden gap-2 p-5 border-2 border-black bg-primary rounded-2xl shadow-[3px_3px_0px_#94a3b8]">
+              <div className="absolute right-[-45%] bottom-[-40%]">
+                <Image src={Shape} alt="Shape" />
+              </div>
+              <h1 className="text-lg z-10 font-bold">{club.name}</h1>
+              <div className="flex flex-row gap-3 text-sm">
+                <p>2 Challenges</p>
+                <p>1 Members</p>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

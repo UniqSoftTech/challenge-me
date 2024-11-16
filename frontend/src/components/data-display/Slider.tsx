@@ -1,18 +1,35 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Range } from "react-range";
+import { Plus, Minus } from "@phosphor-icons/react";
 import CaretLeft from "../../assets/caretleft.svg";
 import CaretRight from "../../assets/caretright.svg";
 import Image from "next/image";
+import Input from "@/components/data-display/Input";
+import Button from "@/components/data-display/Button";
 
-export default function Slider() {
-  const [value, setValue] = useState([30]);
+export default function Slider({
+  price,
+  setPrice,
+}: {
+  price: number;
+  setPrice: (value: number) => void;
+}) {
+  const [value, setValue] = useState([price]);
+
+  useEffect(() => {
+    setValue([price]); // Update slider value when `price` changes
+  }, [price]);
+
   return (
     <Range
       step={1}
       min={0}
       max={50}
       values={value}
-      onChange={(values) => setValue(values)}
+      onChange={(values) => {
+        setValue(values);
+        setPrice(values[0]); // Update the price state when the slider moves
+      }}
       renderTrack={({ props, children }) => (
         <div
           {...props}

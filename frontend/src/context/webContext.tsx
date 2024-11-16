@@ -8,7 +8,7 @@ import { Web3AuthOptions } from "@web3auth/modal";
 import { chainConfig } from "@/utils/chainUtils";
 
 const clientId =
-  "BPX4ykTOMg5RaG5B5rdckeHMLqQQtT72TeJ3vgXfNZbuP3Lec6a3DFwJLZWul0HI9gv26yrEZr0e_aq5QxvHlOY";
+  "BL-UfOVx5rVplTrquz_wlU4kO2ijt5mN8W2SOMWi17NXQivpHzDF5YFzw2TCn2WjvpA1HenhDs4Ct3GSc83UieI";
 
 const privateKeyProvider = new EthereumPrivateKeyProvider({
   config: { chainConfig },
@@ -16,7 +16,7 @@ const privateKeyProvider = new EthereumPrivateKeyProvider({
 
 const web3AuthOptions: Web3AuthOptions = {
   clientId,
-  web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
+  web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
   privateKeyProvider,
   chainConfig,
 };
