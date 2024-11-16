@@ -114,15 +114,6 @@ function App() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#00D084] text-black">
-      <div className="flex justify-between items-center px-4 py-2">
-        <div className="text-black text-sm font-bold">12:45</div>
-        <div className="flex gap-2 items-center">
-          <div className="w-2.5 h-2.5 bg-black rounded-full"></div>
-          <div className="w-2.5 h-2.5 bg-black rounded-full"></div>
-          <div className="w-2.5 h-2.5 bg-black rounded-full"></div>
-        </div>
-      </div>
-
       <div className="flex flex-col justify-center flex-grow relative gap-12">
         <h1 className="text-4xl font-extrabold px-6 text-black">
           Challenge
