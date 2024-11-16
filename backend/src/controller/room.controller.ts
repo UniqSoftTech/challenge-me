@@ -6,8 +6,8 @@ export class RoomController {
     try {
       const { name } = req.body
 
-      await db.Room.create({ name: name, created_by: req?.user?.id, created_at: new Date() });
-      res.status(200).send({ status: true });
+      const data = await db.Room.create({ name: name, created_by: req?.user?.id, created_at: new Date() });
+      res.status(200).send({ status: true, data });
     } catch (error) {
       return res.status(500).send(error);
     }
