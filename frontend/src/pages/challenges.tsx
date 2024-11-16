@@ -64,7 +64,13 @@ function App() {
               <Minus />
             </button>
             <div className="flex-grow items-center justify-center">
-              <Input placeholder="0.00" />
+              <Input
+                value={0}
+                placeholder="0.00"
+                label="price"
+                name="price"
+                onChange={() => console.log("haha")}
+              />
             </div>
             <button className="p-3 bg-gray-200 rounded-full">
               <Plus />
@@ -74,7 +80,13 @@ function App() {
             <Slider />
           </div>
           <div className="flex flex-col gap-4 pt-4">
-            <Input placeholder="Leave a message" />
+            <Input
+              value={""}
+              placeholder="Leave a message"
+              label="price"
+              name="price"
+              onChange={() => console.log("haha")}
+            />
             <Button title="Confirm" onPress={() => console.log("haha")} />
           </div>
         </div>

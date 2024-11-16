@@ -54,7 +54,7 @@ const Footer = () => {
       <div className="flex justify-between items-center px-4 py-2">
         {routes.map((route, index) => {
           return (
-            <div className="flex flex-col w-1/3 items-center">
+            <div key={index} className="flex flex-col w-1/3 items-center">
               <button
                 onClick={() => router.push(route?.route || "/")}
                 className="focus:outline-none"

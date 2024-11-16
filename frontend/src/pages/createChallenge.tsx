@@ -31,7 +31,13 @@ function App() {
         </div>
         <div className="flex flex-col gap-2">
           <h1>I can...</h1>
-          <Input placeholder="Title" />
+          <Input
+            value={""}
+            label="Title"
+            name="title"
+            onChange={() => console.log("cons")}
+            placeholder="Title"
+          />
         </div>
         <div className="flex flex-col gap-5">
           <h1>Suggessted Challenges</h1>
@@ -50,7 +56,7 @@ function App() {
         </div>
         <div className="flex justify-end flex-end">
           <div>
-            <Button title="Next" />
+            <Button title="Next" onPress={() => console.log("gg")} />
           </div>
         </div>
       </div>
