@@ -23,7 +23,7 @@ router.put('/user', authenticate, v.updateUser, checkValid, user.put);
 /** room */
 router.post('/room', authenticate, room.create);
 router.get('/room', authenticate, room.get);
-router.get('/user-rooms', authenticate, room.getUserRooms);
+router.get('/room/user', authenticate, room.getUserRooms);
 
 /** room member */
 router.post('/room-member/join', authenticate, v.joinRoom, checkValid, roomMember.joinRoom);

@@ -16,7 +16,7 @@ export class RoomController {
   get = async (req: any, res: any) => {
     try {
 
-      const data = await db.Room.findAll();
+      const data = await db.Room.findAll({});
       res.status(200).send({ status: true, data });
     } catch (error) {
       return res.status(500).send(error);
@@ -25,7 +25,17 @@ export class RoomController {
 
   getUserRooms = async (req: any, res: any) => {
     try {
-      const data = await db.Room.findAll({ where: { created_by: req?.user?.id }, include: [{ model: db.RoomMember, as: 'members' }] });
+      const myCreatedRooms = await db.Room.findAll({ where: { created_by: req?.user?.id } });
+      const myJoinedRooms = await db.RoomMember.findAll({ where: { user_id: req?.user?.id }, include: [{ model: db.Room, as: 'room' }] });
+
+      let data = myCreatedRooms;
+
+      await Promise.all(myJoinedRooms.map((x: any) => {
+        const item = x.toJSON();
+        data.push(item.room);
+      }))
+
+
       res.status(200).json({ status: true, data });
     } catch (error) {
       res.status(500).json({ message: 'Internal server error', error });
