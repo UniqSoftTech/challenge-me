@@ -8,17 +8,17 @@ import sequelize from './configs/db.config';
 
 const app = express();
 app.use(bodyParser.json());
+
 app.use(cors({
   origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.use("/", routes);
-
-app.get('/', (req: Request, res: Response) => {
-  res.send(new Date());
-});
+app.use((_: any, res: any) => { res.status(404).json({ message: "not found" }) });
+app.use((err: any, req: any, res: any, next: any) => { res.status(500).json({ message: err.message }) });
+app.get('/', (req: Request, res: Response) => { res.send(new Date()); });
 
 if (process.env.NODE_ENV !== 'production') {
   const server = http.createServer(app);

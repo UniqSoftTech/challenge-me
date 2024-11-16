@@ -10,14 +10,14 @@ interface ChatRoomAttr {
 
 interface ChatRoomCreateAttr extends Optional<ChatRoomAttr, "id"> { }
 
-class ChatRoom extends Model<ChatRoomAttr, ChatRoomCreateAttr> implements ChatRoomAttr {
+class Room extends Model<ChatRoomAttr, ChatRoomCreateAttr> implements ChatRoomAttr {
   public id!: number;
   public name!: string;
   public created_by!: number;
   public readonly created_at!: Date;
 }
 
-ChatRoom.init(
+Room.init(
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     name: { type: DataTypes.STRING, allowNull: false },
@@ -32,4 +32,4 @@ ChatRoom.init(
   }
 );
 
-export default ChatRoom;
+export default Room;
