@@ -342,7 +342,7 @@ export class ContractController {
       res.status(200).json({
         message: 'Bet placed successfully',
         data: {
-          transactionHash: receipt.transactionHash,
+          transactionHash: JSON.stringify(receipt),
         }
       });
     } catch (error) {
