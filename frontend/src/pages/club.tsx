@@ -32,6 +32,16 @@ function App() {
         </button>
       </div>
       <div className="flex flex-col gap-3">
+        {data?.data?.length === 0 && (
+          <div className="flex flex-col relative overflow-hidden gap-2 p-5 border-2 border-black bg-gray-200 rounded-2xl shadow-[3px_3px_0px_#94a3b8]">
+            <div className="flex flex-col gap-3 text-sm">
+              <p className="font-bold">You don't have any clubs yet.</p>
+              <p>
+                Create or join clubs to start challenging others and yourself
+              </p>
+            </div>
+          </div>
+        )}
         {data?.data?.map((club: any, index: number) => {
           return (
             <div

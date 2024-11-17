@@ -73,7 +73,7 @@ const store: GlobalStateCreator = (set, get) => ({
         if (statusCode === 401) {
           await localStorage.removeItem("token");
 
-          toast("Error sending request.", { type: "error" });
+          // toast("Error sending request.", { type: "error" });
           // showMessage({
           //   message: 'Session хугацаа дууссан',
           //   description: 'Дахин нэвтэрнэ үү.',
@@ -104,7 +104,7 @@ const store: GlobalStateCreator = (set, get) => ({
             },
           }));
 
-          toast("Error sending request.", { type: "error" });
+          // toast("Error sending request.", { type: "error" });
           // showMessage({
           //   message: 'Алдаа',
           //   description: 'Хүсэлтэнд алдаа гарлаа.',
@@ -136,7 +136,7 @@ const store: GlobalStateCreator = (set, get) => ({
             },
           },
         }));
-        toast("Хүсэлтэнд алдаа гарлаа.", { type: "error" });
+        // toast("Хүсэлтэнд алдаа гарлаа.", { type: "error" });
         // showMessage({
         //   message: 'Алдаа',
         //   description: 'Хүсэлтэнд алдаа гарлаа.',

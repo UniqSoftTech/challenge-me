@@ -153,7 +153,7 @@ const App = () => {
         onSuccess: async (result) => {
           if (result?.data?.status) {
             await localStorage.setItem("token", result?.data?.data?.token);
-            router.push("/app");
+            router.push("/club");
           } else {
             router.push("/verification");
           }

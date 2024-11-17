@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ReactNode } from "react";
 import { AppProps } from "next/app";
-import SEOHead from "@/components/SeoHead";
 import { Epilogue } from "next/font/google";
-import {
-  Web3AuthProvider,
-  Web3AuthProviderProps,
-} from "@web3auth/modal-react-hooks";
-import { AuthProvider } from "@/context/authContext";
-import { initializeWeb3AuthContext } from "../context/webContext";
-
-import "../styles/public.css";
-import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+
+import SEOHead from "@/components/SeoHead";
 import Layout from "@/components/Layout";
+import { Web3AuthProvider } from "@web3auth/modal-react-hooks";
+import { AuthProvider } from "@/context/authContext";
+import { initializeWeb3AuthContext } from "@/context/webContext";
+
+import "@/styles/public.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const font = Epilogue({
   subsets: ["latin"],
@@ -20,10 +18,11 @@ const font = Epilogue({
   style: ["normal", "italic"],
 });
 
-// Define the type for the Web3Auth context config
-type Web3AuthConfig = Web3AuthProviderProps["config"];
+type Web3AuthConfig = Parameters<typeof Web3AuthProvider>[0]["config"];
 
-const App: React.FC<AppProps> = ({ Component, pageProps }) => {
+const Web3AuthInitializer: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [web3AuthConfig, setWeb3AuthConfig] = useState<Web3AuthConfig | null>(
     null,
   );
@@ -33,7 +32,6 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       const config = await initializeWeb3AuthContext();
       setWeb3AuthConfig(config);
     };
-
     initWeb3Auth();
   }, []);
 
@@ -42,16 +40,22 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   }
 
   return (
+    <Web3AuthProvider config={web3AuthConfig}>{children}</Web3AuthProvider>
+  );
+};
+
+const App: React.FC<AppProps> = ({ Component, pageProps }) => {
+  return (
     <>
       <main className={font.className}>
         <SEOHead />
-        <Web3AuthProvider config={web3AuthConfig}>
+        <Web3AuthInitializer>
           <AuthProvider>
             <Layout>
               <Component {...pageProps} />
             </Layout>
           </AuthProvider>
-        </Web3AuthProvider>
+        </Web3AuthInitializer>
       </main>
       <ToastContainer />
     </>

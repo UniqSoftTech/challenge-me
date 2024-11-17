@@ -64,6 +64,7 @@ function App() {
 
     if (web3auth.connected) {
       const address = await getAccounts();
+      setWalletAddress(address);
 
       await execute(
         "login",

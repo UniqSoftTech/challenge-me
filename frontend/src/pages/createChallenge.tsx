@@ -9,9 +9,12 @@ import { useState } from "react";
 import { ArrowLeft, Plus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
 
+import { toast } from "react-toastify";
+
 function App() {
   const router = useRouter();
   const [question, setQuestion] = useState<string | undefined>();
+  const [days, setDays] = useState<string | undefined>();
 
   const { loading, data, trigger } = useRequest({
     key: "suggestedQuestions",
@@ -26,7 +29,10 @@ function App() {
       { method: "POST", url: "contract/createMarket" },
       {
         data: { question: question },
-        onSuccess: (data) => router.push("/challenges"),
+        onSuccess: (data) => {
+          router.push("/challenges");
+          toast("Challenge created successfully");
+        },
         onError: (error) => console.log("error", error),
       },
     );
@@ -49,6 +55,20 @@ function App() {
           </button>
         </div>
         <div className="flex flex-col gap-2">
+          <select
+            id={"1"}
+            name={"Group"}
+            value={1}
+            // onChange={handleInputChange}
+            className={`w-full px-4 py-3 font-bold rounded-2xl border-2 border-gray-400 rounded focus:outline-none focus:ring-1 focus:border-black focus:ring-black`}
+          >
+            <option value="">Jay's Club...</option>
+            {["Jay's Club"]?.map((option) => (
+              <option key={option} className="font-bold text-xl" value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
           <h1>I can...</h1>
           <Input
             value={question || ""}
@@ -56,6 +76,14 @@ function App() {
             name="title"
             onChange={(e) => setQuestion(e.target.value)}
             placeholder="Title"
+          />
+          <h1>Deadline (days from now)</h1>
+          <Input
+            value={days || ""}
+            label="1 days..."
+            name="1 days..."
+            onChange={(e) => setDays(e.target.value)}
+            placeholder="1 days..."
           />
         </div>
         <div className="flex flex-col gap-5">

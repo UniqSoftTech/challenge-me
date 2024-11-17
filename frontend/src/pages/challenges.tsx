@@ -9,6 +9,10 @@ import { useState } from "react";
 import { Plus, Minus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
 import Slider from "@/components/data-display/Slider";
+import ethersRPC from "@/utils/ethersRPC";
+import { useWeb3Auth } from "@web3auth/modal-react-hooks";
+import Image from "next/image";
+import Rocket from "../assets/rocket.gif";
 
 function App() {
   const [isOpen, setIsOpen] = useState(true);
@@ -17,10 +21,44 @@ function App() {
   const [message, setMessage] = useState("");
   const [isShowPrice, setIsShowPrice] = useState(false);
 
+  const { provider, web3Auth } = useWeb3Auth();
+
   const { loading, data, trigger } = useRequest({
     key: "contractbets",
     url: "contract/get-bets",
   });
+
+  const { execute } = useGlobalRequestStore();
+
+  const handleBet = async (result: boolean) => {
+    const contractAddress = "0x8c0122481be8E495e4435f1Bc652DcD16AAD6C7e"; // Replace with your deployed contract address
+    const marketId = 5; // Example market ID
+    const isYes = true; // Example: Betting Yes
+    const betAmount = "0.00001"; // Amount in ETH
+
+    if (provider) {
+      const receipt = await ethersRPC.interactWithContract(
+        provider,
+        contractAddress,
+        marketId,
+        isYes,
+        betAmount,
+      );
+
+      console.log("Transaction successful:", receipt);
+    } else {
+      console.log("Provider is null.");
+    }
+    // await execute(
+    //   "placeBet",
+    //   { method: "POST", url: "contract/placeBet" },
+    //   {
+    //     data: { marketId: 5, _isYes: result, amountInEther: price },
+    //     onSuccess: (data) => router.push("/challenges"),
+    //     onError: (error) => console.log("error", error),
+    //   },
+    // );
+  };
 
   return (
     <div className="p-4">
@@ -34,30 +72,39 @@ function App() {
           <h1>Create</h1>
         </button>
       </div>
+      {/* <div className="absolute top-[35%] left-[20%] shadow-2xl rounded-2xl">
+        <Image
+          src={Rocket}
+          className="border-2 rounded-xl"
+          width={250}
+          height={250}
+          alt="gif"
+        />
+      </div> */}
       <div className="flex flex-col gap-4 p-4 border rounded-2xl shadow-[3px_3px_0px_#94a3b8]">
-        <h2 className="text-sm">Gainers Club</h2>
+        <h2 className="text-sm">Jay's Club</h2>
         <div className="flex flex-row justify-between border-b pb-2">
           <div className="flex flex-row items-center gap-2">
             <div className="h-5 w-5 bg-black rounded-full" />
-            <h1 className="text-sm font-bold">Djon Zena</h1>
+            <h1 className="text-sm font-bold">Jay</h1>
           </div>
-          <p className="text-sm">10 day remaining</p>
+          <p className="text-sm">30 days remaining</p>
         </div>
 
         <div className="flex flex-row gap-3 items-center">
           <div className="bg-gray-200 px-2 py-1 rounded-full">
             <h1>💪</h1>
           </div>
-          <div className="text-lg font-semibold">Losing 10kg a Day</div>
+          <div className="text-lg font-semibold">Losing 10kg in 30 days</div>
         </div>
         <div>
           <div className="flex w-full items-center">
-            <div className="h-1 bg-green-400" style={{ width: "28%" }}></div>
-            <div className="h-1 bg-red-400" style={{ width: "72%" }}></div>
+            <div className="h-1 bg-green-400" style={{ width: "50%" }}></div>
+            <div className="h-1 bg-red-400" style={{ width: "50%" }}></div>
           </div>
           <div className="flex w-full justify-between mt-2">
-            <h2 className="text-green-400">28%</h2>
-            <h2 className="text-red-400">72%</h2>
+            <h2 className="text-green-400">50%</h2>
+            <h2 className="text-red-400">50%</h2>
           </div>
         </div>
         <div className="text-sm">13 Votes</div>
@@ -108,7 +155,7 @@ function App() {
                 name="price"
                 onChange={(e: any) => setMessage(e.target.value)}
               />
-              <Button title="Confirm" onPress={() => console.log("haha")} />
+              <Button title="Confirm" onPress={() => handleBet(true)} />
             </div>
           </div>
         )}
