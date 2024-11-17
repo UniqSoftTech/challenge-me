@@ -8,6 +8,7 @@ import useRequest from "@/hooks/useRequest";
 import { useState } from "react";
 import { ArrowLeft, Plus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 function App() {
   const [isOpen, setIsOpen] = useState(true);
@@ -16,15 +17,7 @@ function App() {
   const { execute } = useGlobalRequestStore();
 
   const handleRoomCreate = async () => {
-    await execute(
-      "room",
-      { method: "POST", url: "room" },
-      {
-        data: { name: roomName },
-        onSuccess: (data) => router.push("/clubInvite"),
-        onError: (error) => console.log("error", error),
-      },
-    );
+    router.push("/club");
   };
 
   return (
@@ -37,19 +30,31 @@ function App() {
       </button>
 
       <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-gray-500">Name your club</h1>
+        <div className="flex flex-col gap-4">
+          <h1 className="text-gray-500">Invite your friends</h1>
           <Input
             label="name"
-            value={roomName || ""}
+            value={"https://challenge-me.vercel.app/room/1234"}
             name="name"
             placeholder="Name..."
             onChange={(e: any) => setRoomName(e.target.value)}
           />
+          <div className="flex flex-row gap-3">
+            <Button
+              title="Copy"
+              className="bg-yellow-400"
+              onPress={() => toast("Copied to clipboard")}
+            />
+            <Button
+              className="bg-white"
+              title="Share"
+              onPress={() => console.log("Share")}
+            />
+          </div>
         </div>
-        <div className="flex justify-end flex-end">
+        <div className="flex justify-end flex-end mt-6">
           <div>
-            <Button title="Next" onPress={() => handleRoomCreate()} />
+            <Button title="Finish" onPress={() => handleRoomCreate()} />
           </div>
         </div>
       </div>
