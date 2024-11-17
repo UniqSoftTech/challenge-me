@@ -58,7 +58,7 @@ const App = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 pb-12">
       <div className="pb-4 flex flex-row items-center justify-between">
         <h1 className="text-xl">My Challenges</h1>
         <button
@@ -137,7 +137,7 @@ const App = () => {
                   placeholder="0.00"
                   label="Price"
                   name="price"
-                  onChange={(e: any) => setPrice(Number(e.target.value))}
+                  onChange={(e: any) => setPrice(e.target.value)}
                 />
               </div>
               <button
@@ -159,12 +159,7 @@ const App = () => {
                 name="message"
                 onChange={(e: any) => setMessage(e.target.value)}
               />
-              <Button title="Confirm Yes" onPress={() => handleBet(true)} />
-              <Button
-                title="Confirm No"
-                className="bg-red-400"
-                onPress={() => handleBet(false)}
-              />
+              <Button title="Confirm" onPress={() => handleBet(true)} />
             </div>
           </div>
         )}
