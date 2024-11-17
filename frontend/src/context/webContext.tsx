@@ -26,28 +26,18 @@ const authAdapter = new AuthAdapter({
     mfaLevel: MFA_LEVELS.OPTIONAL,
   },
   adapterSettings: {
-    uxMode: UX_MODE.REDIRECT, // "redirect" | "popup"
+    uxMode: UX_MODE.REDIRECT,
   },
 });
 
-// Wrap async logic in a function
 export const initializeWeb3AuthContext = async () => {
-  try {
-    const adapters = await getDefaultExternalAdapters({
-      options: web3AuthOptions,
-    });
+  const adapters = await getDefaultExternalAdapters({
+    options: web3AuthOptions,
+  });
 
-    return {
-      web3AuthOptions,
-      adapters: [authAdapter, ...adapters],
-      plugins: [],
-    };
-  } catch (error) {
-    console.error("Error initializing Web3Auth context:", error);
-    return {
-      web3AuthOptions,
-      adapters: [authAdapter],
-      plugins: [],
-    };
-  }
+  return {
+    web3AuthOptions,
+    adapters: [authAdapter, ...adapters],
+    plugins: [],
+  };
 };
