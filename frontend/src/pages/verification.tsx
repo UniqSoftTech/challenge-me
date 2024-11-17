@@ -30,6 +30,7 @@ const App = () => {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
   const { execute } = useGlobalRequestStore();
   const [type, setType] = useState(0);
+  const { wallet } = router.query;
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -146,7 +147,7 @@ const App = () => {
       {
         data: {
           ...formData,
-          wallet: walletAddress,
+          wallet: walletAddress || wallet,
           proof: proof?.proof,
           age: 27,
         },

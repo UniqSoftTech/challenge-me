@@ -14,8 +14,6 @@ import WalletAvatar from "@/components/data-display/ProfilePic";
 function App() {
   const router = useRouter();
   const { provider, web3Auth } = useWeb3Auth();
-  console.log("🚀 ~ App ~ web3Auth:", web3Auth);
-  console.log("🚀 ~ App ~ provider:", provider);
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,8 +40,35 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen p-4 flex flex-col gap-6">
+    <div className="min-h-screen p-4 pb-16 flex flex-col gap-6">
       <h1 className="text-xl">My Profile</h1>
+      <div className="border px-4 py-3 rounded-xl">
+        <h2 className="text-sm">Name</h2>
+        <h2 className="font-semibold">Jay</h2>
+      </div>
+      <div className="border px-4 py-3 rounded-xl">
+        <h2 className="text-sm">Birthdate</h2>
+        <h2 className="font-semibold">1997/11/10</h2>
+      </div>
+      <div className="border px-4 py-3 rounded-xl">
+        <h2 className="text-sm">Pronoun</h2>
+        <h2 className="font-semibold">He/him</h2>
+      </div>
+
+      <div className="border px-4 py-3 rounded-xl">
+        <h2 className="text-sm">Height</h2>
+        <h2 className="font-semibold">183</h2>
+      </div>
+
+      <div className="border px-4 py-3 rounded-xl">
+        <h2 className="text-sm">Weight</h2>
+        <h2 className="font-semibold">93 kg</h2>
+      </div>
+
+      <div className="border px-4 py-3 rounded-xl">
+        <h2 className="text-sm">Relationship Status</h2>
+        <h2 className="font-semibold">In a relationship</h2>
+      </div>
       <Button title="Logout" className="bg-white" onPress={() => logout()} />
     </div>
   );

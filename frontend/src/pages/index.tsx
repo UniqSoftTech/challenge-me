@@ -76,10 +76,10 @@ function App() {
               await localStorage.setItem("token", result?.data?.data?.token);
               router.push("/club");
             } else {
-              router.push("/verification");
+              router.push(`/verification?wallet=${address}`);
             }
           },
-          onError: (error) => router.push("/verification"),
+          onError: (error) => router.push(`/verification?wallet=${address}`),
         },
       );
     }
