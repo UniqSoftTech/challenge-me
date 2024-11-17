@@ -9,6 +9,8 @@ import { useState } from "react";
 import { Plus, Minus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
 import Slider from "@/components/data-display/Slider";
+import ethersRPC from "@/utils/ethersRPC";
+import { useWeb3Auth } from "@web3auth/modal-react-hooks";
 
 function App() {
   const [isOpen, setIsOpen] = useState(true);
@@ -17,10 +19,44 @@ function App() {
   const [message, setMessage] = useState("");
   const [isShowPrice, setIsShowPrice] = useState(false);
 
+  const { provider, web3Auth } = useWeb3Auth();
+
   const { loading, data, trigger } = useRequest({
     key: "contractbets",
     url: "contract/get-bets",
   });
+
+  const { execute } = useGlobalRequestStore();
+
+  const handleBet = async (result: boolean) => {
+    const contractAddress = "0x8c0122481be8E495e4435f1Bc652DcD16AAD6C7e"; // Replace with your deployed contract address
+    const marketId = 5; // Example market ID
+    const isYes = true; // Example: Betting Yes
+    const betAmount = "0.00001"; // Amount in ETH
+
+    if (provider) {
+      const receipt = await ethersRPC.interactWithContract(
+        provider,
+        contractAddress,
+        marketId,
+        isYes,
+        betAmount,
+      );
+
+      console.log("Transaction successful:", receipt);
+    } else {
+      console.log("Provider is null.");
+    }
+    // await execute(
+    //   "placeBet",
+    //   { method: "POST", url: "contract/placeBet" },
+    //   {
+    //     data: { marketId: 5, _isYes: result, amountInEther: price },
+    //     onSuccess: (data) => router.push("/challenges"),
+    //     onError: (error) => console.log("error", error),
+    //   },
+    // );
+  };
 
   return (
     <div className="p-4">
@@ -108,7 +144,7 @@ function App() {
                 name="price"
                 onChange={(e: any) => setMessage(e.target.value)}
               />
-              <Button title="Confirm" onPress={() => console.log("haha")} />
+              <Button title="Confirm" onPress={() => handleBet(true)} />
             </div>
           </div>
         )}
