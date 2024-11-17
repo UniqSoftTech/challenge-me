@@ -1,42 +1,41 @@
 "use client";
 
+import React, { useState } from "react";
 import Button from "@/components/data-display/Button";
 import Input from "@/components/data-display/Input";
-import ReusableModal from "@/components/data-display/Modal";
-import useGlobalRequestStore from "@/hooks/useGlobalRequestStore";
-import useRequest from "@/hooks/useRequest";
-import { useState } from "react";
+import Slider from "@/components/data-display/Slider";
 import { Plus, Minus } from "@phosphor-icons/react";
 import { useRouter } from "next/router";
-import Slider from "@/components/data-display/Slider";
 import ethersRPC from "@/utils/ethersRPC";
 import { useWeb3Auth } from "@web3auth/modal-react-hooks";
 import Image from "next/image";
 import Rocket from "../assets/rocket.gif";
+import { toast } from "react-toastify";
 
-function App() {
-  const [isOpen, setIsOpen] = useState(true);
+const App = () => {
   const router = useRouter();
   const [price, setPrice] = useState(0);
   const [message, setMessage] = useState("");
   const [isShowPrice, setIsShowPrice] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [transactionInfo, setTransactionInfo] = useState<any | null>(null); // Transaction info
 
-  const { provider, web3Auth } = useWeb3Auth();
+  const { provider } = useWeb3Auth();
 
-  const { loading, data, trigger } = useRequest({
-    key: "contractbets",
-    url: "contract/get-bets",
-  });
-
-  const { execute } = useGlobalRequestStore();
-
-  const handleBet = async (result: boolean) => {
-    const contractAddress = "0x8c0122481be8E495e4435f1Bc652DcD16AAD6C7e"; // Replace with your deployed contract address
+  const handleBet = async (isYes: boolean) => {
+    const contractAddress = "0x8c0122481be8E495e4435f1Bc652DcD16AAD6C7e"; // Replace with your contract address
     const marketId = 5; // Example market ID
-    const isYes = true; // Example: Betting Yes
-    const betAmount = "0.00001"; // Amount in ETH
+    const betAmount = price.toString(); // Convert price to string (ETH)
 
-    if (provider) {
+    if (!provider) {
+      console.log("Provider is null.");
+      return;
+    }
+
+    try {
+      setIsLoading(true); // Start loading
+      setTransactionInfo(null); // Reset previous transaction info
+
       const receipt = await ethersRPC.interactWithContract(
         provider,
         contractAddress,
@@ -46,18 +45,16 @@ function App() {
       );
 
       console.log("Transaction successful:", receipt);
-    } else {
-      console.log("Provider is null.");
+      setTransactionInfo(receipt); // Save transaction info for display
+
+      // Show success toast
+      toast.success(`Transaction successful! Hash: ${receipt.transactionHash}`);
+    } catch (error) {
+      console.error("Error during transaction:", error);
+      toast.error("Transaction failed. Please try again.");
+    } finally {
+      setIsLoading(false); // Stop loading
     }
-    // await execute(
-    //   "placeBet",
-    //   { method: "POST", url: "contract/placeBet" },
-    //   {
-    //     data: { marketId: 5, _isYes: result, amountInEther: price },
-    //     onSuccess: (data) => router.push("/challenges"),
-    //     onError: (error) => console.log("error", error),
-    //   },
-    // );
   };
 
   return (
@@ -72,15 +69,21 @@ function App() {
           <h1>Create</h1>
         </button>
       </div>
-      {/* <div className="absolute top-[35%] left-[20%] shadow-2xl rounded-2xl">
-        <Image
-          src={Rocket}
-          className="border-2 rounded-xl"
-          width={250}
-          height={250}
-          alt="gif"
-        />
-      </div> */}
+
+      {/* Loading Indicator */}
+      {isLoading && (
+        <div className="absolute top-[35%] left-[20%] shadow-2xl rounded-2xl">
+          <Image
+            src={Rocket}
+            className="border-2 rounded-xl"
+            width={250}
+            height={250}
+            alt="Loading..."
+          />
+        </div>
+      )}
+
+      {/* Main Content */}
       <div className="flex flex-col gap-4 p-4 border rounded-2xl shadow-[3px_3px_0px_#94a3b8]">
         <h2 className="text-sm">Jay's Club</h2>
         <div className="flex flex-row justify-between border-b pb-2">
@@ -97,16 +100,16 @@ function App() {
           </div>
           <div className="text-lg font-semibold">Losing 10kg in 30 days</div>
         </div>
-        <div>
-          <div className="flex w-full items-center">
-            <div className="h-1 bg-green-400" style={{ width: "50%" }}></div>
-            <div className="h-1 bg-red-400" style={{ width: "50%" }}></div>
-          </div>
-          <div className="flex w-full justify-between mt-2">
-            <h2 className="text-green-400">50%</h2>
-            <h2 className="text-red-400">50%</h2>
-          </div>
+
+        <div className="flex w-full items-center">
+          <div className="h-1 bg-green-400" style={{ width: "50%" }}></div>
+          <div className="h-1 bg-red-400" style={{ width: "50%" }}></div>
         </div>
+        <div className="flex w-full justify-between mt-2">
+          <h2 className="text-green-400">50%</h2>
+          <h2 className="text-red-400">50%</h2>
+        </div>
+
         <div className="text-sm">13 Votes</div>
         <div className="flex flex-row gap-2">
           <Button title="Yes" onPress={() => setIsShowPrice(!isShowPrice)} />
@@ -116,13 +119,14 @@ function App() {
             onPress={() => setIsShowPrice(!isShowPrice)}
           />
         </div>
+
         {isShowPrice && (
           <div>
             <h2>Choose the amount you want to stake</h2>
             <div className="flex flex-row gap-3 items-center py-4 self-center">
               <button
                 onClick={() => setPrice(price - 1)}
-                disabled={price < 0 || price === 0}
+                disabled={price <= 0}
                 className="p-3 bg-gray-200 rounded-full"
               >
                 <Minus />
@@ -131,14 +135,14 @@ function App() {
                 <Input
                   value={price}
                   placeholder="0.00"
-                  label="price"
+                  label="Price"
                   name="price"
-                  onChange={(e: any) => setPrice(e.target.value)}
+                  onChange={(e: any) => setPrice(Number(e.target.value))}
                 />
               </div>
               <button
                 onClick={() => setPrice(price + 1)}
-                disabled={price > 49 || price === 50}
+                disabled={price >= 50}
                 className="p-3 bg-gray-200 rounded-full"
               >
                 <Plus />
@@ -151,30 +155,36 @@ function App() {
               <Input
                 value={message}
                 placeholder="Leave a message"
-                label="price"
-                name="price"
+                label="Message"
+                name="message"
                 onChange={(e: any) => setMessage(e.target.value)}
               />
-              <Button title="Confirm" onPress={() => handleBet(true)} />
+              <Button title="Confirm Yes" onPress={() => handleBet(true)} />
+              <Button
+                title="Confirm No"
+                className="bg-red-400"
+                onPress={() => handleBet(false)}
+              />
             </div>
           </div>
         )}
-        <div className="px-3 py-3 border rounded-xl flex flex-col gap-1">
-          <div className="flex flex-row items-center gap-2">
-            <div className="h-5 w-5 rounded-full bg-black" />
-            <h1 className="text-sm text-gray-500">
-              <span className="font-bold text-black">Jane Doe</span>{" "}
-              <span>voted</span>
-              &nbsp;<span className="font-semibold text-green-500">Yes</span> at
-              4.99 USDT
-            </h1>
+
+        {/* Transaction Info */}
+        {transactionInfo && (
+          <div className="px-3 py-3 border rounded-xl flex flex-col gap-1 bg-gray-100">
+            <h3 className="text-lg font-bold">Transaction Successful!</h3>
+            <p>
+              <strong>Transaction Hash:</strong>
+              {transactionInfo.transactionHash}
+            </p>
+            <p>
+              <strong>Block Number:</strong> {transactionInfo.blockNumber}
+            </p>
           </div>
-          <p>Nah, you tripping bro. All in on Nope</p>
-          <p className="text-sm text-right text-gray-400">1hr ago</p>
-        </div>
+        )}
       </div>
     </div>
   );
-}
+};
 
 export default App;
