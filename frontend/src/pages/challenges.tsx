@@ -72,7 +72,7 @@ const App = () => {
 
       {/* Loading Indicator */}
       {isLoading && (
-        <div className="absolute top-[35%] left-[20%] shadow-2xl rounded-2xl">
+        <div className="absolute z-10 top-[35%] left-[20%] shadow-2xl rounded-2xl">
           <Image
             src={Rocket}
             className="border-2 rounded-xl"
@@ -168,9 +168,9 @@ const App = () => {
         {transactionInfo && (
           <div className="px-3 py-3 border rounded-xl flex flex-col gap-1 bg-gray-100">
             <h3 className="text-lg font-bold">Transaction Successful!</h3>
-            <p>
-              <strong>Transaction Hash:</strong>
-              {transactionInfo.transactionHash}
+            <p className="break-words">
+              <strong>Transaction Hash: </strong>
+              {transactionInfo.hash}
             </p>
             <p>
               <strong>Block Number:</strong> {transactionInfo.blockNumber}
